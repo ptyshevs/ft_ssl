@@ -1,2 +1,3 @@
 *.a
 ft_ssl
+cmake-build-debug/
