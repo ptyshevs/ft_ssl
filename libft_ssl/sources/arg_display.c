@@ -6,7 +6,7 @@
 /*   By: ptyshevs <ptyshevs@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/11 18:11:28 by ptyshevs          #+#    #+#             */
-/*   Updated: 2018/02/11 18:51:24 by ptyshevs         ###   ########.fr       */
+/*   Updated: 2018/02/11 23:02:59 by ptyshevs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,12 +38,14 @@ int	display_usage(t_args *args)
 void	display_options_and_exit(char *option)
 {
 	if (option != NULL)
-		ft_printf("invalid option '%s'\n", option);
+		ft_printf("unknown option '%s'\n", option);
 	ft_printf("options are\n");
 	ft_printf("-i <file>\tinput file\n-o <file>\toutput file\n"
 				"-e\t\tencrypt\n"
 				"-d\t\tdecrypt\n"
-				"-a\tbase64 encode/decode, depending on encryption flag\n");
+				"-a\t\tbase64 encode/decode, depending on encryption flag\n"
+				"-k\t\tkey in hex is the next argument\n"
+				"-v\t\tiv in hex is the next argument\n");
 	exit(1);
 }
 
@@ -53,7 +55,7 @@ void		handle_file(int *fd, char *filename)
 		display_options_and_exit(NULL);
 	else if ((*fd = open(filename, O_RDONLY)) == -1)
 	{
-		perror("No such file or directory.\n");
+		perror(filename);
 		exit(1);
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: ptyshevs <ptyshevs@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/11 11:58:14 by ptyshevs          #+#    #+#             */
-/*   Updated: 2018/02/11 18:55:09 by ptyshevs         ###   ########.fr       */
+/*   Updated: 2018/02/11 23:17:37 by ptyshevs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,34 +24,41 @@ t_bool	is_valid_command(t_args *args)
 	return (FALSE);
 }
 
-unsigned long long	parse_hex(char *key)
+t_options	*init_options()
 {
+	t_options *opt;
 
+	opt = (t_options *)malloc(sizeof(t_options));
+	opt->fd_from = 0;
+	opt->fd_to = 1;
+	opt->base64 = FALSE;
+	opt->encrypt = TRUE;
+	opt->key = 0;
+	opt->iv = 0;
+	return (opt);
 }
 
 t_options	*parse_options(t_args *args)
 {
 	t_options	*opt;
 
-	opt = (t_options *)malloc(sizeof(t_options));
-	opt->fd_from = 0;
-	opt->fd_to = 1;
+	opt = init_options();
 	while (args->options && *args->options)
 	{
-		if (ft_strequ(*args->options, "-e"))
-			opt->encrypt = TRUE;
-		else if (ft_strequ(*args->options, "-d"))
-			opt->encrypt = FALSE;
+		if (ft_strequ(*args->options, "-e") || ft_strequ(*args->options, "-d"))
+			opt->encrypt = ft_strequ(*args->options, "-e") ? TRUE : FALSE;
+		else if (ft_strequ(*args->options, "-a"))
+			opt->base64 = TRUE;
 		else if (ft_strequ(*args->options, "-i"))
-			handle_file(&opt->fd_from, *(args->options + 1));
+			handle_file(&opt->fd_from, *(args->options++ + 1));
 		else if (ft_strequ(*args->options, "-o"))
-			handle_file(&opt->fd_to, *(args->options + 1));
+			handle_file(&opt->fd_to, *(args->options++ + 1));
 		else if (ft_strequ(*args->options, "-k"))
 			*(args->options + 1) == NULL ? display_options_and_exit(NULL) : 
-			(opt->key = parse_hex(*(args->options + 1)));
+			(opt->key = parse_hex(validate_hex(*(args->options++ + 1), "key")));
 		else if (ft_strequ(*args->options, "-v"))
 			*(args->options + 1) == NULL ? display_options_and_exit(NULL) :
-			(opt->iv = ft_atoi(*(args->options + 1)));
+			(opt->iv = parse_hex(validate_hex(*(args->options++ + 1), "iv")));
 		else
 			display_options_and_exit(*args->options);
 		args->options++;
@@ -63,7 +70,6 @@ void	dispatch(t_args *args)
 {
 	t_options *opt;
 
-	printf("parsing options\n");
 	opt = parse_options(args);
 	printf("dispatch was called\n");
 }
