@@ -6,7 +6,7 @@
 /*   By: ptyshevs <ptyshevs@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/11 12:01:31 by ptyshevs          #+#    #+#             */
-/*   Updated: 2018/02/11 17:41:42 by ptyshevs         ###   ########.fr       */
+/*   Updated: 2018/02/11 18:54:32 by ptyshevs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 
 # include "libft.h"
 # include "ft_ssl.h"
+# include <fcntl.h>
+# include <string.h>
 # include <stdio.h>  // Don't forget to remove
 
 typedef struct	s_args
@@ -33,10 +35,9 @@ typedef struct	s_options
 {
 	int			fd_to;
 	int			fd_from;
-	int			key; // des key in hex
-	int			initial_vector; // initial vector for des-cbc
-	t_bool		encode;
-
+	unsigned long long	key; // des key in hex
+	unsigned long long	iv; // initial vector for des-cbc
+	t_bool		encrypt;
 }				t_options;
 
 static t_command implemented_commands[] = {{"base64", &base64},
@@ -48,7 +49,10 @@ static t_command implemented_commands[] = {{"base64", &base64},
 
 t_args	*arg_parse(int ac, char **av);
 t_bool	is_valid_command(t_args *args);
-void	show_usage(t_args *args);
+int		display_usage(t_args *args);
+void	display_options_and_exit(char *option);
+void	handle_file(int *fd, char *filename);
+
 void	dispatch(t_args *args);
 
 

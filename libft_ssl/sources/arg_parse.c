@@ -6,7 +6,7 @@
 /*   By: ptyshevs <ptyshevs@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/11 11:58:14 by ptyshevs          #+#    #+#             */
-/*   Updated: 2018/02/11 17:47:03 by ptyshevs         ###   ########.fr       */
+/*   Updated: 2018/02/11 18:55:09 by ptyshevs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,36 +24,50 @@ t_bool	is_valid_command(t_args *args)
 	return (FALSE);
 }
 
-void	show_usage(t_args *args)
+unsigned long long	parse_hex(char *key)
 {
-	int	i;
 
-	if (args->command == NULL)
-		ft_printf("usage: ft_ssl command [command opts] [command args]\n");
-	else
+}
+
+t_options	*parse_options(t_args *args)
+{
+	t_options	*opt;
+
+	opt = (t_options *)malloc(sizeof(t_options));
+	opt->fd_from = 0;
+	opt->fd_to = 1;
+	while (args->options && *args->options)
 	{
-		ft_printf("ft_ssl: Error: '%s' is an invalid command.\n\n", args->command);
-	ft_printf("Standard commands:\n");
-	ft_printf("\nMessage Digest commands:\n");
-	ft_printf("\nCipher commands:\n");
-	i = 0;
-	while (implemented_commands[i].command_name)
-		printf("%s\n", implemented_commands[i++].command_name);
+		if (ft_strequ(*args->options, "-e"))
+			opt->encrypt = TRUE;
+		else if (ft_strequ(*args->options, "-d"))
+			opt->encrypt = FALSE;
+		else if (ft_strequ(*args->options, "-i"))
+			handle_file(&opt->fd_from, *(args->options + 1));
+		else if (ft_strequ(*args->options, "-o"))
+			handle_file(&opt->fd_to, *(args->options + 1));
+		else if (ft_strequ(*args->options, "-k"))
+			*(args->options + 1) == NULL ? display_options_and_exit(NULL) : 
+			(opt->key = parse_hex(*(args->options + 1)));
+		else if (ft_strequ(*args->options, "-v"))
+			*(args->options + 1) == NULL ? display_options_and_exit(NULL) :
+			(opt->iv = ft_atoi(*(args->options + 1)));
+		else
+			display_options_and_exit(*args->options);
+		args->options++;
 	}
+	return (opt);
 }
 
 void	dispatch(t_args *args)
 {
-	(void)args;
+	t_options *opt;
+
+	printf("parsing options\n");
+	opt = parse_options(args);
 	printf("dispatch was called\n");
 }
 
-
-int		validate(t_args *args)
-{
-	(void)args;
-	return (0);
-}
 
 /*
 ** @brief      Parse command-line arguments into a structure
