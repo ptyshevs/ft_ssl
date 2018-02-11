@@ -1,24 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   des_cbc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ptyshevs <ptyshevs@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/02/11 10:12:18 by ptyshevs          #+#    #+#             */
-/*   Updated: 2018/02/11 16:40:26 by ptyshevs         ###   ########.fr       */
+/*   Created: 2018/02/11 16:14:31 by ptyshevs          #+#    #+#             */
+/*   Updated: 2018/02/11 16:14:44 by ptyshevs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "arg_parse.h"
-#include "ft_ssl.h"
+/*
+** @brief      Parse options for DES-ECB encoding
+**
+** @param      options  The options
+**
+** @return     { description_of_the_return_value }
+*/
 
-int		main(int ac, char **av)
+int		des_cbc(char **options)
 {
-	t_args *args = arg_parse(ac, av);
-	if (is_valid_command(args))
-		dispatch(args);
-	else
-		show_usage(args);
-	return (0);
+	(void)options;
+	return (1);
 }
