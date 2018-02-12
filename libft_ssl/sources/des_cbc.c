@@ -6,19 +6,21 @@
 /*   By: ptyshevs <ptyshevs@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/11 16:14:31 by ptyshevs          #+#    #+#             */
-/*   Updated: 2018/02/11 16:14:44 by ptyshevs         ###   ########.fr       */
+/*   Updated: 2018/02/12 08:03:30 by ptyshevs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "ft_ssl.h"
+
 /*
-** @brief      Parse options for DES-ECB encoding
+** @brief      Data Encryption Standard cipher
 **
 ** @param      options  The options
 **
-** @return     { description_of_the_return_value }
+** @return     1 if everything is OK, otherwise 0
 */
 
-int		des_cbc(char **options)
+int		des_cbc(t_options *options)
 {
 	(void)options;
 	return (1);

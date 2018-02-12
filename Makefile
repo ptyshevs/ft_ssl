@@ -63,7 +63,7 @@ LIBSSL_NAME = libft_ssl.a
 LIBSSL_SRCDIR = $(LIBFTSSLDIR)/sources
 LIBSSL_INCDIR = $(LIBFTSSLDIR)/includes
 
-LIBSSL_HEADNAMES = ft_ssl
+LIBSSL_HEADNAMES = ft_ssl structures arg_parse
 LIBSSL_HEADERS = $(patsubst %, $(LIBSSL_INCDIR)/%.h, $(LIBSSL_HEADNAMES))
 
 LIBSSL_FILENAMES =	arg_parse num_parse arg_display base64 des_ecb des_cbc

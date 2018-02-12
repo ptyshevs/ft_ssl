@@ -6,13 +6,13 @@
 /*   By: ptyshevs <ptyshevs@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/11 18:11:28 by ptyshevs          #+#    #+#             */
-/*   Updated: 2018/02/11 23:02:59 by ptyshevs         ###   ########.fr       */
+/*   Updated: 2018/02/12 08:09:57 by ptyshevs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "arg_parse.h"
 
-int	display_usage(t_args *args)
+int		display_usage(t_args *args)
 {
 	int	i;
 
@@ -29,8 +29,8 @@ int	display_usage(t_args *args)
 		ft_printf("\nMessage Digest commands:\n");
 		ft_printf("\nCipher commands:\n");
 		i = 0;
-		while (implemented_commands[i].command_name)
-			ft_printf("%s\n", implemented_commands[i++].command_name);
+		while (g_implemented_commands[i].command_name)
+			ft_printf("%s\n", g_implemented_commands[i++].command_name);
 		return (1);
 	}
 }
@@ -49,7 +49,7 @@ void	display_options_and_exit(char *option)
 	exit(1);
 }
 
-void		handle_file(int *fd, char *filename)
+void	handle_file(int *fd, char *filename)
 {
 	if (filename == NULL)
 		display_options_and_exit(NULL);

@@ -6,7 +6,7 @@
 /*   By: ptyshevs <ptyshevs@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/11 12:01:31 by ptyshevs          #+#    #+#             */
-/*   Updated: 2018/02/11 22:57:58 by ptyshevs         ###   ########.fr       */
+/*   Updated: 2018/02/12 07:56:45 by ptyshevs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,38 +14,13 @@
 # define ARG_PARSE_H
 
 # include "libft.h"
+# include "structures.h"
 # include "ft_ssl.h"
 # include <fcntl.h>
 # include <string.h>
 # include <stdio.h>  // Don't forget to remove
 
-typedef struct	s_args
-{
-	char		*command;
-	char		**options;
-}				t_args;
 
-typedef struct s_command
-{
-	char	*command_name;
-	int 	(*f)(char **);
-}				t_command;
-
-typedef struct	s_options
-{
-	int			fd_to;
-	int			fd_from;
-	unsigned long long	key; // des key in hex
-	unsigned long long	iv; // initial vector for des-cbc
-	t_bool		base64;
-	t_bool		encrypt;
-}				t_options;
-
-static t_command implemented_commands[] = {{"base64", &base64},
-									{"des", &des_ecb},
-									{"des-ecb", &des_ecb},
-									{"des-cbc", &des_cbc},
-									{NULL, NULL}};
 
 char				*validate_hex(char *nbr, char *type);
 unsigned long long	parse_hex(char *nbr);

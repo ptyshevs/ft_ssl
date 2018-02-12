@@ -6,7 +6,7 @@
 /*   By: ptyshevs <ptyshevs@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/11 15:58:45 by ptyshevs          #+#    #+#             */
-/*   Updated: 2018/02/11 16:14:36 by ptyshevs         ###   ########.fr       */
+/*   Updated: 2018/02/12 08:10:23 by ptyshevs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,9 @@
 ** @return     { description_of_the_return_value }
 */
 
-int		des_ecb(char **options)
+int		des_ecb(t_options *options)
 {
 	(void)options;
+	printf("des_ecb was called!\n");
 	return (1);
 }

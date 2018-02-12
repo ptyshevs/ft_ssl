@@ -6,7 +6,7 @@
 /*   By: ptyshevs <ptyshevs@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/11 22:37:26 by ptyshevs          #+#    #+#             */
-/*   Updated: 2018/02/11 22:56:05 by ptyshevs         ###   ########.fr       */
+/*   Updated: 2018/02/12 07:31:27 by ptyshevs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ char				*validate_hex(char *nbr, char *type)
 unsigned long long	parse_hex(char *nbr)
 {
 	unsigned long long	res;
-	
+
 	res = 0;
 	while (*nbr)
 	{
