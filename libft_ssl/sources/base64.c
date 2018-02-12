@@ -6,7 +6,7 @@
 /*   By: ptyshevs <ptyshevs@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/11 10:17:31 by ptyshevs          #+#    #+#             */
-/*   Updated: 2018/02/12 21:19:01 by ptyshevs         ###   ########.fr       */
+/*   Updated: 2018/02/12 21:32:31 by ptyshevs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,14 +86,12 @@ char	*base64_decrypt(char *in)
 {
 	char	*ret;
 	int		octet;
+	int		i;
 
-	int len = ft_slen(in)  - ft_slen(in) / 4;
-	// ft_printf("len: %d\n", len);
-	ret = ft_strnew(len);
-	int i = 0;
+	ret = ft_strnew(ft_slen(in) - ft_slen(in) / 4);
+	i = 0;
 	while (ft_slen(in) / 4)
 	{
-				// ft_printf("%d | %d\n", get_index(*in), get_index((*(in + 1))));
 		while (*in == '\n')
 			in++;
 		octet = (get_index(*in++) << 18);
@@ -106,19 +104,10 @@ char	*base64_decrypt(char *in)
 		while (*in == '\n')
 			in++;
 		octet += get_index(*in++);
-		// ft_printf("octet: %d\n", octet);
-		// ft_printf("%d | %d\n", get_index(*in), get_index((*(in + 1))));
-		// octet = (get_index(*in) << 18) + (get_index(*(in + 1)) << 12) +
-		// 		(get_index(*(in + 2)) << 6) + get_index(*(in + 3));
-		// ft_printf("new octet: %d\n", octet);
-		// in += 4;
-		// ft_printf("octet 1: %d | %d | %d\n", (octet & 16711680) >> 16,
-			// (octet & 65280) >> 8, octet & 255);
 		ret[i++] = (octet & 16711680) >> 16;
 		ret[i++] = (octet & 65280) >> 8;
 		ret[i++] = octet & 255;
 	}
-	// ft_printf("ret: %s\n", ret);
 	return (ret);
 }
 

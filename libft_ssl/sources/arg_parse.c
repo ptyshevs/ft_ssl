@@ -6,7 +6,7 @@
 /*   By: ptyshevs <ptyshevs@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/11 11:58:14 by ptyshevs          #+#    #+#             */
-/*   Updated: 2018/02/12 15:41:44 by ptyshevs         ###   ########.fr       */
+/*   Updated: 2018/02/12 21:33:50 by ptyshevs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,8 @@ void		dispatch(t_args *args)
 		if (ft_strequ(g_implemented_commands[i].command_name, args->command))
 		{
 			if (!g_implemented_commands[i].f(opt))
-				ft_dprintf(2, "Something went wrong with %s encryption function\n", args->command);
+				ft_dprintf(2, "Smth went wrong with %s encryption function\n",
+					args->command);
 			break ;
 		}
 		i++;
