@@ -6,21 +6,12 @@
 /*   By: ptyshevs <ptyshevs@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/11 10:17:31 by ptyshevs          #+#    #+#             */
-/*   Updated: 2018/02/12 18:12:31 by ptyshevs         ###   ########.fr       */
+/*   Updated: 2018/02/12 21:19:01 by ptyshevs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ssl.h"
-
-/*
-** index table
-*/
-
-char g_it[] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
-	'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a',
-	'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p',
-	'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4',
-	'5', '6', '7', '8', '9', '+', '/'};
+#include "tools.h"
 
 char	*append_pad(char *ret, char *in, int pad, int i)
 {
@@ -42,26 +33,6 @@ char	*append_pad(char *ret, char *in, int pad, int i)
 	return (ret);
 }
 
-t_bool	is_valid_base64(char *s)
-{
-	int	i;
-
-	while (*s)
-	{
-		i = 0;
-		while (i < 64)
-		{
-			if (g_it[i] == *s)
-				break ;
-			i++;
-		}
-		if (i == 64)
-			return (FALSE);
-		s++;
-	}
-	return (TRUE);
-}
-
 char	*base64_encrypt(char *in)
 {
 	char	*ret;
@@ -78,7 +49,7 @@ char	*base64_encrypt(char *in)
 	i = 0;
 	while (ft_slen(in) / 3)
 	{
-		octet = (*in << 16) + (*(in + 1) << 8) + (*(in + 2));
+		octet = (*in << 16) + (*(in + 1) << 8) + *(in + 2);
 		in += 3;
 		ret[i] = g_it[(octet & 16515072) >> 18];
 		ret[i + 1] = g_it[(octet & 258048) >> 12];
@@ -89,10 +60,66 @@ char	*base64_encrypt(char *in)
 	return (append_pad(ret, in, pad, i));
 }
 
+/*
+** @brief      Map ASCII char to it's index in base64 index table.
+**
+** @param      c     char
+**
+** @return     The index.
+*/
+
+int		get_index(char c)
+{
+	int i;
+
+	i = 0;
+	while (i < 64)
+	{
+		if (g_it[i] == c)
+			return (i);
+		i++;
+	}
+	return (0);
+}
+
 char	*base64_decrypt(char *in)
 {
-	(void)in;
-	return (NULL);
+	char	*ret;
+	int		octet;
+
+	int len = ft_slen(in)  - ft_slen(in) / 4;
+	// ft_printf("len: %d\n", len);
+	ret = ft_strnew(len);
+	int i = 0;
+	while (ft_slen(in) / 4)
+	{
+				// ft_printf("%d | %d\n", get_index(*in), get_index((*(in + 1))));
+		while (*in == '\n')
+			in++;
+		octet = (get_index(*in++) << 18);
+		while (*in == '\n')
+			in++;
+		octet += (get_index(*in++) << 12);
+		while (*in == '\n')
+			in++;
+		octet += get_index(*in++) << 6;
+		while (*in == '\n')
+			in++;
+		octet += get_index(*in++);
+		// ft_printf("octet: %d\n", octet);
+		// ft_printf("%d | %d\n", get_index(*in), get_index((*(in + 1))));
+		// octet = (get_index(*in) << 18) + (get_index(*(in + 1)) << 12) +
+		// 		(get_index(*(in + 2)) << 6) + get_index(*(in + 3));
+		// ft_printf("new octet: %d\n", octet);
+		// in += 4;
+		// ft_printf("octet 1: %d | %d | %d\n", (octet & 16711680) >> 16,
+			// (octet & 65280) >> 8, octet & 255);
+		ret[i++] = (octet & 16711680) >> 16;
+		ret[i++] = (octet & 65280) >> 8;
+		ret[i++] = octet & 255;
+	}
+	// ft_printf("ret: %s\n", ret);
+	return (ret);
 }
 
 /*
@@ -113,6 +140,7 @@ int		base64(t_options *options)
 	in = read_fd(options->fd_from, 100);
 	out = options->encrypt ? base64_encrypt(in) : base64_decrypt(in);
 	if (out)
-		ft_dprintf(options->fd_to, options->fd_to == 1 ? "%s\n" : "%s", out);
+		output_base64(options->fd_to, out, options->encrypt);
+	free(out);
 	return (1);
 }
