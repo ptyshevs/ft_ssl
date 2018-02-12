@@ -6,12 +6,24 @@
 /*   By: ptyshevs <ptyshevs@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/11 10:17:31 by ptyshevs          #+#    #+#             */
-/*   Updated: 2018/02/12 21:32:31 by ptyshevs         ###   ########.fr       */
+/*   Updated: 2018/02/12 21:47:48 by ptyshevs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ssl.h"
 #include "tools.h"
+
+/*
+** @brief      Add padding at the end of base64 string, if the last octet is not
+**             full.
+**
+** @param      ret   base64 string
+** @param      in    plaintext
+** @param      pad   padding - the number of '=' to be added
+** @param      i     current position in base64 string
+**
+** @return     base64 string with appended padding.
+*/
 
 char	*append_pad(char *ret, char *in, int pad, int i)
 {
@@ -32,6 +44,14 @@ char	*append_pad(char *ret, char *in, int pad, int i)
 	}
 	return (ret);
 }
+
+/*
+** @brief      Encrypt plaintext into base64
+**
+** @param      in    plaintext
+**
+** @return     base64 cipher text
+*/
 
 char	*base64_encrypt(char *in)
 {
@@ -81,6 +101,14 @@ int		get_index(char c)
 	}
 	return (0);
 }
+
+/*
+** @brief      Decrypt Base64, while ignoring newlines
+**
+** @param      in    Base64 string
+**
+** @return     Plaintext
+*/
 
 char	*base64_decrypt(char *in)
 {
