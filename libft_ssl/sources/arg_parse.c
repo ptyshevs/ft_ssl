@@ -6,7 +6,7 @@
 /*   By: ptyshevs <ptyshevs@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/11 11:58:14 by ptyshevs          #+#    #+#             */
-/*   Updated: 2018/02/12 08:12:39 by ptyshevs         ###   ########.fr       */
+/*   Updated: 2018/02/12 15:41:44 by ptyshevs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,9 +52,9 @@ t_options	*parse_options(t_args *args)
 		else if (ft_strequ(*args->options, "-a"))
 			opt->base64 = TRUE;
 		else if (ft_strequ(*args->options, "-i"))
-			handle_file(&opt->fd_from, *(args->options++ + 1));
+			handle_file(&opt->fd_from, *(args->options++ + 1), TRUE);
 		else if (ft_strequ(*args->options, "-o"))
-			handle_file(&opt->fd_to, *(args->options++ + 1));
+			handle_file(&opt->fd_to, *(args->options++ + 1), FALSE);
 		else if (ft_strequ(*args->options, "-k") && (opt->key_provided = TRUE))
 			*(args->options + 1) == NULL ? display_options_and_exit(NULL) :
 			(opt->key = parse_hex(validate_hex(*(args->options++ + 1), "key")));

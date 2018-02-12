@@ -6,7 +6,7 @@
 /*   By: ptyshevs <ptyshevs@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/11 10:17:31 by ptyshevs          #+#    #+#             */
-/*   Updated: 2018/02/12 15:26:32 by ptyshevs         ###   ########.fr       */
+/*   Updated: 2018/02/12 18:12:31 by ptyshevs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,27 +25,41 @@ char g_it[] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
 char	*append_pad(char *ret, char *in, int pad, int i)
 {
 	int	octet;
-	int len;
+	int	len;
 
 	if (pad)
 	{
 		octet = 0;
 		len = 4 - pad;
 		while (pad && len--)
-		{
-			ft_printf("extracting char (%c|%d)\n", *in, *in);
 			octet = (octet << 8) + *in++;
-		}
 		octet = octet << (8 * (pad - 1));
-		ret[i] = (octet & 16515072) >> 18 == 0 ? '=' :
-							g_it[(octet & 16515072) >> 18];
-		ret[i + 1] = (octet & 258048) >> 12 == 0 ? '=' :
-							g_it[(octet & 258048) >> 12];
-		ret[i + 2] = (octet & 4032) >> 6 == 0 ? '=' : g_it[(octet & 4032) >> 6];
-		ret[i + 3] = octet & 63 ? g_it[octet & 63] : '=';
-		ft_printf("last block octet: %d\n", octet);
+		ret[i] = 4 - pad > 0 ? g_it[(octet & 16515072) >> 18] : '=';
+		ret[i + 1] = 3 - pad > 0 ? g_it[(octet & 258048) >> 12] : '=';
+		ret[i + 2] = 2 - pad > 0 ? g_it[(octet & 4032) >> 6] : '=';
+		ret[i + 3] = 1 - pad > 0 ? g_it[octet & 63] : '=';
 	}
 	return (ret);
+}
+
+t_bool	is_valid_base64(char *s)
+{
+	int	i;
+
+	while (*s)
+	{
+		i = 0;
+		while (i < 64)
+		{
+			if (g_it[i] == *s)
+				break ;
+			i++;
+		}
+		if (i == 64)
+			return (FALSE);
+		s++;
+	}
+	return (TRUE);
 }
 
 char	*base64_encrypt(char *in)
@@ -57,6 +71,7 @@ char	*base64_encrypt(char *in)
 	int		pad;
 
 	out_len = ft_slen(in) + ft_slen(in) / 3;
+	out_len += ft_slen(in) % 3 == 0 ? 0 : 1;
 	pad = (4 - (out_len % 4)) % 4;
 	out_len += (4 - (out_len % 4)) % 4;
 	ret = ft_strnew(out_len);
@@ -96,11 +111,8 @@ int		base64(t_options *options)
 	char	*out;
 
 	in = read_fd(options->fd_from, 100);
-	ft_printf("base64, baby!\n");
-	if (options->encrypt)
-		out = base64_encrypt(in);
-	else
-		out = base64_decrypt(in);
-	ft_dprintf(options->fd_to, "%s\n", out);
+	out = options->encrypt ? base64_encrypt(in) : base64_decrypt(in);
+	if (out)
+		ft_dprintf(options->fd_to, options->fd_to == 1 ? "%s\n" : "%s", out);
 	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: ptyshevs <ptyshevs@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/11 18:11:28 by ptyshevs          #+#    #+#             */
-/*   Updated: 2018/02/12 08:09:57 by ptyshevs         ###   ########.fr       */
+/*   Updated: 2018/02/12 15:46:33 by ptyshevs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,11 +49,16 @@ void	display_options_and_exit(char *option)
 	exit(1);
 }
 
-void	handle_file(int *fd, char *filename)
+void	handle_file(int *fd, char *filename, t_bool from)
 {
-	if (filename == NULL)
+	if (from && filename == NULL)
 		display_options_and_exit(NULL);
-	else if ((*fd = open(filename, O_RDONLY)) == -1)
+	else if (from && (*fd = open(filename, O_RDONLY)) == -1)
+	{
+		perror(filename);
+		exit(1);
+	}
+	else if ((*fd = open(filename, O_RDWR|O_CREAT, 0664)) == -1)
 	{
 		perror(filename);
 		exit(1);
