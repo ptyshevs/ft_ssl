@@ -51,7 +51,7 @@ LIBFT_FILENAMES =	ft_putnbr ft_putchar ft_putstr ft_isalpha ft_atoi ft_bzero \
 		ft_gnl ft_isupper ft_wchrlen ft_wcstombs ft_wctomb ft_wcslen ft_printf \
 		ft_dprintf ft_sprintf ft_printf_convertors ft_printf_lst ft_printf_tools \
 		ft_printf_parsers ft_printf_posargs ft_printf_put_misc ft_printf_put_numbers \
-		ft_printf_put_strings ft_lstpush ft_startswith ft_endswith ft_sjoin
+		ft_printf_put_strings ft_lstpush ft_startswith ft_endswith ft_sjoin ft_concat
 
 LIBFT_CFILES = $(patsubst %, $(LIBFT_SRCDIR)/%.c, $(LIBFT_FILENAMES))
 LIBFT_OFILES = $(patsubst %, $(ODIR)/$(LIBFT_DIR)/%.o, $(LIBFT_FILENAMES))
@@ -66,7 +66,8 @@ LIBSSL_INCDIR = $(LIBFTSSLDIR)/includes
 LIBSSL_HEADNAMES = ft_ssl structures arg_parse
 LIBSSL_HEADERS = $(patsubst %, $(LIBSSL_INCDIR)/%.h, $(LIBSSL_HEADNAMES))
 
-LIBSSL_FILENAMES =	arg_parse num_parse arg_display base64 des_ecb des_cbc
+LIBSSL_FILENAMES =	arg_parse num_parse arg_display tools \
+					base64 des_ecb des_cbc
 LIBSSL_CFILES = $(patsubst %, $(LIBSSL_SRCDIR)/%.c, $(LIBSSL_FILENAMES))
 LIBSSL_OFILES = $(patsubst %, $(ODIR)/%.o, $(LIBSSL_FILENAMES))
 

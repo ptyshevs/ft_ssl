@@ -6,7 +6,7 @@
 /*   By: ptyshevs <ptyshevs@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/11 10:14:24 by ptyshevs          #+#    #+#             */
-/*   Updated: 2018/02/12 08:08:49 by ptyshevs         ###   ########.fr       */
+/*   Updated: 2018/02/12 09:16:30 by ptyshevs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 # include "structures.h"
 # include "libft.h"
 # include <stdio.h>  // Don't forget to remove
+
+char	*read_fd(int fd, int bufsize);
 
 int		base64(t_options *options);
 int		des_ecb(t_options *options);

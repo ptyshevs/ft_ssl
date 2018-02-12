@@ -6,13 +6,19 @@
 /*   By: ptyshevs <ptyshevs@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/11 10:17:31 by ptyshevs          #+#    #+#             */
-/*   Updated: 2018/02/12 08:15:29 by ptyshevs         ###   ########.fr       */
+/*   Updated: 2018/02/12 09:18:20 by ptyshevs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ssl.h"
 
-char	*base64_encode(char *input)
+char index_table[] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
+	'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a',
+	'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p',
+	'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4',
+	'5', '6', '7', '8', '9', '+', '/'};
+
+char	*base64_encrypt(char *input)
 {
 	char *ret = NULL;
 	asprintf(&ret, "base64_encode was called! input is %s\n", input);
@@ -31,7 +37,15 @@ char	*base64_encode(char *input)
 
 int		base64(t_options *options)
 {
-	(void)options;
+	char	*in;
+	char	*out;
+
+	in = read_fd(options->fd_from, 100);
 	printf("base64, baby!\n");
+	if (options->encrypt)
+		out = base64_encrypt(in);
+	else
+		out = base64_decrypt(in);
+	ft_dprintf(options->fd_to, "%s\n", out);
 	return (1);
 }
