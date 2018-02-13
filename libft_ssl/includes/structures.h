@@ -6,7 +6,7 @@
 /*   By: ptyshevs <ptyshevs@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 07:56:00 by ptyshevs          #+#    #+#             */
-/*   Updated: 2018/02/12 08:26:43 by ptyshevs         ###   ########.fr       */
+/*   Updated: 2018/02/13 22:01:01 by ptyshevs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,5 +38,7 @@ typedef struct s_command
 	char	*command_name;
 	int		(*f)(t_options *opt);
 }				t_command;
+
+typedef unsigned long long t_block;
 
 #endif

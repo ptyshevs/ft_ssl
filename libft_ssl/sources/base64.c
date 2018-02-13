@@ -6,7 +6,7 @@
 /*   By: ptyshevs <ptyshevs@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/11 10:17:31 by ptyshevs          #+#    #+#             */
-/*   Updated: 2018/02/13 12:08:27 by ptyshevs         ###   ########.fr       */
+/*   Updated: 2018/02/13 22:32:34 by ptyshevs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ char	*base64_encrypt(char *in)
 
 	out_len = ft_slen(in) + ft_slen(in) / 3;
 	out_len += ft_slen(in) % 3 == 0 ? 0 : 1;
-	pad = (4 - (out_len % 4)) % 4;
+	pad = (4 - ((out_len) % 4)) % 4;
 	out_len += (4 - (out_len % 4)) % 4;
 	ret = ft_strnew(out_len);
 	i = 0;
@@ -71,11 +71,10 @@ char	*base64_encrypt(char *in)
 	{
 		octet = (*in << 16) + (*(in + 1) << 8) + *(in + 2);
 		in += 3;
-		ret[i] = g_it[(octet & 16515072) >> 18];
-		ret[i + 1] = g_it[(octet & 258048) >> 12];
-		ret[i + 2] = g_it[(octet & 4032) >> 6];
-		ret[i + 3] = g_it[octet & 63];
-		i += 4;
+		ret[i++] = g_it[(octet & 16515072) >> 18];
+		ret[i++] = g_it[(octet & 258048) >> 12];
+		ret[i++] = g_it[(octet & 4032) >> 6];
+		ret[i++] = g_it[octet & 63];
 	}
 	return (append_pad(ret, in, pad, i));
 }
@@ -154,7 +153,7 @@ int		base64(t_options *options)
 	char	*in;
 	char	*out;
 
-	in = read_fd(options->fd_from, 100);
+	in = read_fd(options->fd_from);
 	out = options->encrypt ? base64_encrypt(in) : base64_decrypt(in);
 	if (out)
 		output_base64(options->fd_to, out, options->encrypt);

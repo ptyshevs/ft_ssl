@@ -17,7 +17,6 @@
 # include "libft.h"
 # include <stdio.h>  // Don't forget to remove
 
-char	*read_fd(int fd, int bufsize);
 
 int		base64(t_options *options);
 int		des_ecb(t_options *options);
