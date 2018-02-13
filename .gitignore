@@ -3,4 +3,3 @@ ft_ssl
 cmake-build-debug/
 *.txt
 temp/
-tests/
