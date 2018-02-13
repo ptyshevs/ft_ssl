@@ -6,7 +6,7 @@
 /*   By: ptyshevs <ptyshevs@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 09:10:29 by ptyshevs          #+#    #+#             */
-/*   Updated: 2018/02/12 21:19:11 by ptyshevs         ###   ########.fr       */
+/*   Updated: 2018/02/13 18:16:42 by ptyshevs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,5 +25,10 @@ static char g_it[] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K',
 
 void	output_base64(int fd, char *b64, t_bool x64);
 int		get_index(char c);
+
+char				*valid_hex(char *nbr, char *type);
+unsigned long long	parse_hex(char *nbr);
+char				*pad_key(char *key);
+
 
 #endif
