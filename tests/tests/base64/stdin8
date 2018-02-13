@@ -1,0 +1,7 @@
+Base64
+Base64 is similar to binary-text-encoding that represents bianry data in an ASCII string format. The term Base64 evolves from a specific MIME content transfer encoding. Each base64 digit represents exactly 6 bits of data.
+
+Base 64 encode commonly used where binary data needs to be stored and transfered over media that designed to deal with textual data. This indeed ensure that the data remains intact without modification during the transport.
+
+Design
+The particular set of 64 characters chosen to represent the 64 place-values for the base varies between implementations. The general strategy is to choose 64 characters that are both members of a subset common to most encodings, and also printable. This combination leaves the data unlikely to be modified in transit through information systems, such as email, that were traditionally not 8-bit clean.[1] For example, MIME's Base64 implementation uses A-Z, a-z, and 0-9 for the first 62 values. Other variations share this property but differ in the symbols chosen for the last two values; an example is UTF-7.

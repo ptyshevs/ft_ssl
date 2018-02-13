@@ -1,7 +1,5 @@
 #!/bin/bash
 
-# COLORS
-
 BLACK='\033[0;30m'
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -20,26 +18,16 @@ LCYAN='\033[1;36m'
 WHITE='\033[1;37m'
 NC='\033[0m'
 
-if [ "$#" -eq 0 ]
+if ! [ `diff $2 $3 | wc -l` -eq "0" ]
 then
-	echo "USAGE: sh test_runner.sh <ft_ssl_binary> [--more] [--clean]"
-	echo "Fail format: [openssl|ft_ssl]"
-	exit
-fi
-
-if ! [ -e "temp" ]
-then
-	mkdir ./temp
-fi
-
-for f in tests/test_*.sh
-do
-	echo -e $BLUE"Running $f: "$NC
-	./$f $@
-done
-
-if [ "$3" == "--clean" ]
-then
-	rm -rf temp
-	rm -f fails
+	if [ "$4" == "--more" ]
+	then
+		echo -e $RED"Failed $1:"$NC >> fails
+		echo "test case [plaintext]: [`cat $1`]" >> fails
+		echo -e "output [${LCYAN}openssl${NC}|ft_ssl]: [${LCYAN}`cat $2`${NC}|`cat $3`]" >> fails
+		echo "" >> fails
+	fi
+	echo -n -e $RED"X"$NC
+else
+	echo -n -e $GREEN"✓"$NC
 fi
