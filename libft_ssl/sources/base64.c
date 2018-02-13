@@ -6,7 +6,7 @@
 /*   By: ptyshevs <ptyshevs@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/11 10:17:31 by ptyshevs          #+#    #+#             */
-/*   Updated: 2018/02/13 22:32:34 by ptyshevs         ###   ########.fr       */
+/*   Updated: 2018/02/13 23:12:21 by ptyshevs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ char	*append_pad(char *ret, char *in, int pad, int i)
 ** @return     base64 cipher text
 */
 
-char	*base64_encrypt(char *in)
+char	*base64_encrypt(char *in, int len)
 {
 	char	*ret;
 	int		i;
@@ -61,13 +61,12 @@ char	*base64_encrypt(char *in)
 	int		out_len;
 	int		pad;
 
-	out_len = ft_slen(in) + ft_slen(in) / 3;
-	out_len += ft_slen(in) % 3 == 0 ? 0 : 1;
+	out_len = len + len / 3 + (len % 3 == 0 ? 0 : 1);
 	pad = (4 - ((out_len) % 4)) % 4;
 	out_len += (4 - (out_len % 4)) % 4;
 	ret = ft_strnew(out_len);
 	i = 0;
-	while (ft_slen(in) / 3)
+	while ((len -= 3) >= 0)
 	{
 		octet = (*in << 16) + (*(in + 1) << 8) + *(in + 2);
 		in += 3;
@@ -109,15 +108,15 @@ int		get_index(char c)
 ** @return     Plaintext
 */
 
-char	*base64_decrypt(char *in)
+char	*base64_decrypt(char *in, int len)
 {
 	char	*ret;
 	int		octet;
 	int		i;
 
-	ret = ft_strnew(ft_slen(in) - ft_slen(in) / 4);
+	ret = ft_strnew(len - len / 4);
 	i = 0;
-	while (ft_slen(in) / 4)
+	while ((len -= 4) >= 0)
 	{
 		while (*in == '\n')
 			in++;
@@ -154,7 +153,8 @@ int		base64(t_options *options)
 	char	*out;
 
 	in = read_fd(options->fd_from);
-	out = options->encrypt ? base64_encrypt(in) : base64_decrypt(in);
+	out = options->encrypt ? base64_encrypt(in, ft_slen(in)) :
+							base64_decrypt(in, ft_slen(in));
 	if (out)
 		output_base64(options->fd_to, out, options->encrypt);
 	free(out);

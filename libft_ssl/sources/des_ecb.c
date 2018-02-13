@@ -6,7 +6,7 @@
 /*   By: ptyshevs <ptyshevs@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/11 15:58:45 by ptyshevs          #+#    #+#             */
-/*   Updated: 2018/02/13 22:44:43 by ptyshevs         ###   ########.fr       */
+/*   Updated: 2018/02/13 23:13:08 by ptyshevs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,8 @@ char	*des_ecb_encrypt(t_options *options, char *in)
 {
 	t_block block;
 
-	while (*in)
+	int len = ft_slen(in);
+	while (len / 8 + 1)
 	{
 		block = *in;
 	}
