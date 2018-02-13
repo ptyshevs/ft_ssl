@@ -19,7 +19,7 @@ NC='\033[0m'
 
 # STDIN piping
 
-echo -n -e $GREEN"stdin:\t"$NC
+echo -n -e $GREEN"[stdin:\t\t"$NC
 for f in tests/base64/stdin*
 do
 	openssl_location="temp/"$(basename $f)"_openssl"
@@ -31,11 +31,11 @@ do
 	echo `cat $f` | $1 base64 > $ft_ssl_location
 	./differ.sh $f $openssl_location $ft_ssl_location $2
 done
-echo ""
+echo -e "]"
 
 # in_out
 
-echo -n -e $GREEN"in out:\t"$NC
+echo -n -e $GREEN"[in out:\t"$NC
 for f in tests/base64/stdin*
 do
 	if [ $(basename "$f") != "stdin5_empty" ]
@@ -56,7 +56,22 @@ do
 		fi
 	fi
 done
-echo ""
+echo -e "\t]"
+
+# Decrypt
+
+echo -n -e $GREEN"[decrypt:\t"$NC
+for f in tests/base64/decr*
+do
+	openssl_location="temp/"$(basename $f)"_openssl_decr"
+	ft_ssl_location="temp/"$(basename $f)"_ft_ssl_decr"
+
+	touch $openssl_location
+	openssl base64 -d -in $f -out $openssl_location
+	$1 base64 -d -i $f > $ft_ssl_location
+	./differ.sh $f $openssl_location $ft_ssl_location $2
+done
+echo -e "\t\t]"
 
 if [ "$2" == "--more" -a -e "fails" ]
 then
