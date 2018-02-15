@@ -6,7 +6,7 @@
 /*   By: ptyshevs <ptyshevs@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/11 10:17:31 by ptyshevs          #+#    #+#             */
-/*   Updated: 2018/02/13 23:12:21 by ptyshevs         ###   ########.fr       */
+/*   Updated: 2018/02/15 12:12:11 by ptyshevs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 ** @return     base64 string with appended padding.
 */
 
-char	*append_pad(char *ret, char *in, int pad, int i)
+char	*append_pad(char *ret, t_uc *in, int pad, int i)
 {
 	int	octet;
 	int	len;
@@ -53,27 +53,27 @@ char	*append_pad(char *ret, char *in, int pad, int i)
 ** @return     base64 cipher text
 */
 
-char	*base64_encrypt(char *in, int len)
+char	*base64_encrypt(t_uc *in, int len)
 {
 	char	*ret;
 	int		i;
-	long	octet;
+	unsigned long	octet;
 	int		out_len;
 	int		pad;
 
 	out_len = len + len / 3 + (len % 3 == 0 ? 0 : 1);
 	pad = (4 - ((out_len) % 4)) % 4;
 	out_len += (4 - (out_len % 4)) % 4;
-	ret = ft_strnew(out_len);
+	ret = (char *)ft_strnew(out_len);
 	i = 0;
 	while ((len -= 3) >= 0)
 	{
-		octet = (*in << 16) + (*(in + 1) << 8) + *(in + 2);
+		octet = ((*in << 16) | (*(in + 1) << 8)) | *(in + 2);
 		in += 3;
-		ret[i++] = g_it[(octet & 16515072) >> 18];
-		ret[i++] = g_it[(octet & 258048) >> 12];
-		ret[i++] = g_it[(octet & 4032) >> 6];
-		ret[i++] = g_it[octet & 63];
+		ret[i++] = g_it[(octet >> 18) & 0x3F];
+		ret[i++] = g_it[(octet >> 12) & 0x3F];
+		ret[i++] = g_it[(octet >> 6) & 0x3F];
+		ret[i++] = g_it[octet & 0x3F];
 	}
 	return (append_pad(ret, in, pad, i));
 }
@@ -108,7 +108,7 @@ int		get_index(char c)
 ** @return     Plaintext
 */
 
-char	*base64_decrypt(char *in, int len)
+char	*base64_decrypt(t_uc *in, int len)
 {
 	char	*ret;
 	int		octet;
@@ -149,12 +149,12 @@ char	*base64_decrypt(char *in, int len)
 
 int		base64(t_options *options)
 {
-	char	*in;
+	t_uc	*in;
 	char	*out;
 
-	in = read_fd(options->fd_from);
-	out = options->encrypt ? base64_encrypt(in, ft_slen(in)) :
-							base64_decrypt(in, ft_slen(in));
+	in = (t_uc *)read_fd(options->fd_from);
+	out = options->encrypt ? base64_encrypt(in, ft_slen((char*)in)) :
+							base64_decrypt(in, ft_slen((char*)in));
 	if (out)
 		output_base64(options->fd_to, out, options->encrypt);
 	free(out);

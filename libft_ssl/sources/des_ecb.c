@@ -6,7 +6,7 @@
 /*   By: ptyshevs <ptyshevs@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/11 15:58:45 by ptyshevs          #+#    #+#             */
-/*   Updated: 2018/02/14 23:11:50 by ptyshevs         ###   ########.fr       */
+/*   Updated: 2018/02/15 12:19:54 by ptyshevs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,12 @@
 #include "tools.h"
 #include <fcntl.h>
 
-unsigned long	split_block(t_block block, t_bool left)
+unsigned long	split_block(t_ull block, t_bool left)
 {
 	return ((left ? block >> 32 : block) & 0xFFFFFFFF);
 }
 
-t_block		swap_bits(t_block block, int i, int j)
+t_ull		swap_bits(t_ull block, int i, int j)
 {
 	t_uc a = (block >> i) & 1;
 	t_uc b = (block >> j) & 1;
@@ -34,9 +34,9 @@ t_block		swap_bits(t_block block, int i, int j)
 	return (block);
 }
 
-t_block		init_permut(t_block block)
+t_ull		init_permut(t_ull block)
 {
-	t_block	res;
+	t_ull	res;
 	int		i;
 	int		shift;
 
@@ -111,7 +111,7 @@ unsigned long long ft_rot(unsigned long long num, unsigned long long mask,
 		return (((num >> shift) | (num << (28 - shift))) & mask);
 }
 
-void get_subkeys(t_block *keys, t_ull key)
+void get_subkeys(t_ull *keys, t_ull key)
 {
 	int		i;
 	t_ull	left;
@@ -175,14 +175,41 @@ t_ull	pbox_permut(t_ull block)
 	return (res);
 }
 
-t_ull	apply_key(t_ull block, t_ull key)
+/*
+** @brief      Apply Feistel function to the given 32-bit block
+**
+**             This operation consists of four stages:
+**
+**             1) Expansion: the 32-bit block is expanded to 48 bits
+**             by duplicating half of the bits
+**
+**             2) Key mixing: output is XORed with a subkey
+**
+**             3) Substitution: block is divided into eight 6-bit pieces, for
+**             each the corresponding 4-bit substitution table is applied. The
+**             leftmost and rightmost bits constitute a 2-bit row number, 4 bits
+**             inside form a column. For example: S(011011) will extract first
+**             and last bit: (|0|1101|1|) = |01| = first row. 1101 = 13th column
+**             Such non-linear substitution is the core of DES security.
+**
+**             4) Permutation: 32-bit output is rearranged according to the
+**             final permutation table to splead bits of each S-box across four
+**             different S-boxed.
+**
+** @param      block  The block
+** @param      key    The key
+**
+** @return     Transformed block
+*/
+
+t_ull	apply_key(t_ull block, t_ull subkey)
 {
 	int		i;
 	t_ull	res;
-	// ft_printf("apply key to block: %032llb\n", block);
+	// ft_printf("apply subkey to block: %032llb\n", block);
 	block = expand_block(block);
 	// ft_printf("block expanded: %048llb\n", block);
-	t_ull xored = block ^ key;
+	t_ull xored = block ^ subkey;
 	// ft_printf("xored: %048llb\n", xored);
 	res = 0;
 	i = 0;
@@ -217,26 +244,34 @@ t_ull	final_permut(t_ull block)
 	return (res);
 }
 
-char	*block_to_str(t_ull block)
+void	block_to_str(t_ull block, t_uc *str, int j)
 {
-	char	*out;
-	int		i;
-	out = ft_strnew(8);
+	int	i;
+
 	i = 0;
 	while (i < 8)
-	{
-		out[i] = block >> (8 * (8 - i - 1));
-		i++;
-	}
-	return (out);
+		str[j++] = (block >> (8 * (8 - i++ - 1))) & 0xFF;
 }
 
-char	*des_ecb_encrypt_block(t_ull *keys, t_ull block)
+t_ull	str_to_block(char *str)
+{
+	t_ull	block;
+	int		i;
+
+	block = 0;
+	i = 0;
+	while (i++ < 8)
+		block = (block << 8) | *str++;
+	return (block);
+}
+
+t_ull	des_ecb_encrypt_block(t_ull *keys, t_ull block)
 {
 	t_ull	left;
 	t_ull	left_prev;
 	t_ull	right;
 	t_ull	right_prev;
+	int		i;
 
 	block = init_permut(block);
 	i = 0;
@@ -262,33 +297,58 @@ char	*des_ecb_encrypt_block(t_ull *keys, t_ull block)
 	return (block);
 }
 
-char	*des_ecb_encrypt(t_options *options, char *in, int len)
+t_ull	add_padding(char *remainder, int value)
 {
-	char	*out;
-	t_block	keys[16];
+	t_ull	block;
 	int		i;
 
-	get_subkeys(keys, options->key);
-	// block = 0x123456789ABCDEF;
-	// // ft_printf("block:\t\t%064llb\n", block);
-	// ft_printf("encrypted message: %llX\n", block);
-	out = ft_strnew(len);
-	while ((len -= 8) > 0)
+	block = 0;
+	i = 0;
+	while (*remainder)
 	{
-		t_block block = 0;
-		i = 0;
-		while (i && i % 9 != 0)
-			block = (block << 8) | in[i++];
+		block = (block << 8) | *remainder++;
+		i++;
+	}
+	while (i++ < 8)
+		block = (block << 8) | value;
+	return (block);
+}
+
+char	*des_ecb_encrypt(t_options *options, char *in, int len)
+{
+	t_uc	*out;
+	t_ull	keys[16];
+	int		i;
+	t_ull	block;
+
+	get_subkeys(keys, options->key);
+	out = (t_uc *)ft_strnew(len + (len % 8 == 0 ? 8 : 8 - (len % 8)));
+	i = 0;
+	while ((len -= 8) >= 0)
+	{
+		block = str_to_block(in);
+		// ft_printf("block:\t\t%064llb\n", block);
 		in += 8;
 		block = des_ecb_encrypt_block(keys, block);
+		// ft_printf("block encrypted:\t\t%064llb\n", block);
+		block_to_str(block, out, i);
+		i += 8;
 	}
-	(void)in;
-	return (NULL);
+	block = add_padding(in, 8 + len == 0 ? 8 : -len);
+	block_to_str(des_ecb_encrypt_block(keys, block), out, i);
+	// if (options->base64)
+	// {
+	// 	in = base64_encrypt(out, ft_slen((char *)out));
+	// 	free(out);
+	// }
+	// return (options->base64 ? in : (char *)out);
+	return ((char *)out);
 }
 
 char	*des_ecb_decrypt(t_options *options, char *in, int len)
 {
 	(void)options;
+	(void)len;
 	(void)in;
 	return (NULL);
 }
@@ -305,6 +365,7 @@ int		des_ecb(t_options *options)
 {
 	char	*in;
 	char	*out;
+	char	*tmp;
 
 	in = read_fd(options->fd_from);
 	if (!options->key_provided)
@@ -312,7 +373,16 @@ int		des_ecb(t_options *options)
 	out = options->encrypt ?	des_ecb_encrypt(options, in, ft_slen(in)) :
 								des_ecb_decrypt(options, in, ft_slen(in));
 	if (out)
-		ft_dprintf(options->fd_to, "%s", out);
+	{
+		if (options->base64)
+		{
+			tmp = out;
+			out = base64_encrypt((t_uc *)out, ft_slen(out));
+			free(tmp);
+		}
+		options->base64 ?	output_base64(options->fd_to, out, options->encrypt) :
+							ft_dprintf(options->fd_to, "%s", out);
+	}
 	free(out);
 	return (1);
 }
