@@ -6,7 +6,7 @@
 /*   By: ptyshevs <ptyshevs@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/11 15:58:45 by ptyshevs          #+#    #+#             */
-/*   Updated: 2018/02/15 12:19:54 by ptyshevs         ###   ########.fr       */
+/*   Updated: 2018/02/15 19:44:47 by ptyshevs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,26 +111,21 @@ unsigned long long ft_rot(unsigned long long num, unsigned long long mask,
 		return (((num >> shift) | (num << (28 - shift))) & mask);
 }
 
-void get_subkeys(t_ull *keys, t_ull key)
+void get_subkeys(t_ull *keys, t_ull key, t_bool encrypt)
 {
 	int		i;
 	t_ull	left;
 	t_ull	right;
 
-	// ft_printf("key: %064llb\n", key);
 	key = key_permut(key);
-	// ft_printf("pc1 permutation: %056llb\n", key);
 	left = (key >> 28) & 0xFFFFFFF;
 	right = key & 0xFFFFFFF;
 	i = 0;
-	// ft_printf("L: %028llb | R: %028llb\n", left, right);
 	while (i < 16)
 	{
 		left = ft_rot(left, 0xFFFFFFF, g_key_shift[i], TRUE);
 		right = ft_rot(right, 0xFFFFFFF, g_key_shift[i], TRUE);
-		// ft_printf("C%02d: %028llb | D%02d: %028llb\n", i + 1, left, i + 1, right);
-		keys[i] = key_compress_permut((left << 28) | right);
-		// ft_printf("K%02d: %048llb\n", i + 1, keys[i]);
+		keys[encrypt ? i : 15 - i] = key_compress_permut((left << 28) | right);
 		i++;
 	}
 }
@@ -206,22 +201,17 @@ t_ull	apply_key(t_ull block, t_ull subkey)
 {
 	int		i;
 	t_ull	res;
-	// ft_printf("apply subkey to block: %032llb\n", block);
+
 	block = expand_block(block);
-	// ft_printf("block expanded: %048llb\n", block);
 	t_ull xored = block ^ subkey;
-	// ft_printf("xored: %048llb\n", xored);
 	res = 0;
 	i = 0;
 	while (i < 8)
 	{
 		int shift = 6 * (8 - i);
-		// ft_printf("shift: %d | shifted mask: %llb\n", shift, 63UL << (shift - 6));
 		t_ull sextet = (xored & (63UL << (shift - 6))) >> (shift - 6);
 		int row = (((sextet & 32) << 1) >> 5) + (sextet & 1);
-		// ft_printf("sextet & 30: %llb\n", sextet & 30);
 		int col = (sextet & 30) >> 1;
-		// ft_printf("sextet: %llb | row: %d | col: %d\n", sextet, row, col);
 		res = (res << 4) | g_sboxes[i++][row][col];
 	}
 	res = pbox_permut(res);
@@ -244,16 +234,27 @@ t_ull	final_permut(t_ull block)
 	return (res);
 }
 
-void	block_to_str(t_ull block, t_uc *str, int j)
+void	block_to_str(t_ull block, t_uc *str, int j, t_bool last_block)
 {
 	int	i;
+	int 	cap;
 
 	i = 0;
-	while (i < 8)
+	cap = last_block ? 8 - (block & 0xFF): 8;
+	if (last_block && cap % 8 == 0)
+		cap = 0;
+	if (last_block)
+		ft_printf("cap: %d\n", cap);
+	// if (last_block)
+	// {
+	// 	cap = block & 0xFF;
+	// 	while ()
+	// }
+	while (i < cap)
 		str[j++] = (block >> (8 * (8 - i++ - 1))) & 0xFF;
 }
 
-t_ull	str_to_block(char *str)
+t_ull	str_to_block(t_uc *str)
 {
 	t_ull	block;
 	int		i;
@@ -282,22 +283,16 @@ t_ull	des_ecb_encrypt_block(t_ull *keys, t_ull block)
 	while (i < 16)
 	{
 		left = right;
-		// ft_printf("left: %llb\n", left);
-		// printf("right: %llX\n", apply_key(right_prev, keys[i]));
-		// printf("apply_key to right: %d\n", apply_key(right_prev, keys[i]) == 0xFFFFFFFFBB23774CULL);
-		// ft_printf("%64llb\n", left_prev ^ apply_key(right_prev, keys[i]));
 		right = left_prev ^ apply_key(right_prev, keys[i]);
-		// ft_printf("L%02d: %032llb | R: %032llb\n", i + 1, left, right);
 		left_prev = left;
 		right_prev = right;
 		i++;
 	}
 	block = final_permut((right << 32) | left);
-	// ft_printf("final L: %032llb\nR: %032llb\n", left, right);
 	return (block);
 }
 
-t_ull	add_padding(char *remainder, int value)
+t_ull	add_padding(t_uc *remainder, int value)
 {
 	t_ull	block;
 	int		i;
@@ -314,43 +309,59 @@ t_ull	add_padding(char *remainder, int value)
 	return (block);
 }
 
-char	*des_ecb_encrypt(t_options *options, char *in, int len)
+char	*des_ecb_encrypt(t_uc *in, t_ull *keys)
 {
 	t_uc	*out;
-	t_ull	keys[16];
+	int		len;
 	int		i;
 	t_ull	block;
 
-	get_subkeys(keys, options->key);
+	len = ft_slen((char *)in);
 	out = (t_uc *)ft_strnew(len + (len % 8 == 0 ? 8 : 8 - (len % 8)));
 	i = 0;
 	while ((len -= 8) >= 0)
 	{
 		block = str_to_block(in);
-		// ft_printf("block:\t\t%064llb\n", block);
 		in += 8;
 		block = des_ecb_encrypt_block(keys, block);
-		// ft_printf("block encrypted:\t\t%064llb\n", block);
-		block_to_str(block, out, i);
+		block_to_str(block, out, i, FALSE);
 		i += 8;
 	}
-	block = add_padding(in, 8 + len == 0 ? 8 : -len);
-	block_to_str(des_ecb_encrypt_block(keys, block), out, i);
-	// if (options->base64)
-	// {
-	// 	in = base64_encrypt(out, ft_slen((char *)out));
-	// 	free(out);
-	// }
-	// return (options->base64 ? in : (char *)out);
+	block = add_padding((t_uc *)in, 8 + len == 0 ? 8 : -len);
+	block_to_str(des_ecb_encrypt_block(keys, block), out, i, FALSE);
 	return ((char *)out);
 }
 
-char	*des_ecb_decrypt(t_options *options, char *in, int len)
+char	*des_ecb_decrypt(t_uc *in, t_ull *keys)
 {
-	(void)options;
-	(void)len;
-	(void)in;
-	return (NULL);
+	t_uc	*out;
+	int		len;
+	int		i;
+	t_ull	block;
+
+	len = ft_slen((char *)in);
+	out = (t_uc *)ft_strnew(len + (len % 8 == 0 ? 8 : 8 - (len % 8)));
+	i = 0;
+	ft_printf("len: %d | len %% 8: %d\n", len, len % 8);
+	while ((len -= 8) >= 0)
+	{
+		block = str_to_block(in);
+
+		in += 8;
+		block = des_ecb_encrypt_block(keys, block);
+		block_to_str(block, out, i, len == 0);
+		i += 8;
+	}
+	ft_printf("len: %d\n", len);
+
+	// block = add_padding(in, 8 + len == 0 ? 8 : -len);
+	// block = des_ecb_encrypt_block(keys, block);
+	// block = des_ecb_encrypt_block(keys, block);
+	ft_printf("last block: %064llb\n", block);
+	// int last_byte = block & 63;
+	// ft_printf("last byte: %08b\n", last_byte);
+	// block_to_str(des_ecb_encrypt_block(keys, block), out, i);
+	return ((char *)out);
 }
 
 /*
@@ -363,25 +374,41 @@ char	*des_ecb_decrypt(t_options *options, char *in, int len)
 
 int		des_ecb(t_options *options)
 {
-	char	*in;
+	t_ull	keys[16];
+	unsigned long	out_len;
+	t_uc	*in;
 	char	*out;
-	char	*tmp;
+	t_uc	*tmp;
 
-	in = read_fd(options->fd_from);
+	in = (t_uc *)read_fd(options->fd_from);
+	tmp = in;
 	if (!options->key_provided)
 		read_key(options);
-	out = options->encrypt ?	des_ecb_encrypt(options, in, ft_slen(in)) :
-								des_ecb_decrypt(options, in, ft_slen(in));
+	get_subkeys(keys, options->key, options->encrypt);
+	if (options->base64 && !options->encrypt)
+	{
+		tmp = in;
+		in = (t_uc *)base64_decrypt(in, ft_slen((char *)in));
+		free(tmp);
+	}
+	if (!options->encrypt)
+		ft_printf("input length: %d\n", ft_slen((char *)in));
+	out = options->encrypt ?	des_ecb_encrypt(in, keys) :
+								des_ecb_decrypt(in, keys);
 	if (out)
 	{
-		if (options->base64)
+		out_len = ft_slen((char *)in);
+		out_len += out_len % 8 == 0 ? 8 : 8 - (out_len % 8);
+		if (options->base64 && options->encrypt)
 		{
-			tmp = out;
-			out = base64_encrypt((t_uc *)out, ft_slen(out));
+			ft_printf("here\n");
+			tmp = (t_uc *)out;
+			out = base64_encrypt((t_uc *)out, out_len);
+			out_len = ft_slen(out);
 			free(tmp);
 		}
-		options->base64 ?	output_base64(options->fd_to, out, options->encrypt) :
-							ft_dprintf(options->fd_to, "%s", out);
+		options->base64 ? output_base64(options->fd_to, (t_uc *)out, out_len, options->encrypt) :
+				write(options->fd_to, out, out_len);
 	}
 	free(out);
 	return (1);

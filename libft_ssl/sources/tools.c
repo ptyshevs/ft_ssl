@@ -6,7 +6,7 @@
 /*   By: ptyshevs <ptyshevs@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 09:03:42 by ptyshevs          #+#    #+#             */
-/*   Updated: 2018/02/13 22:46:56 by ptyshevs         ###   ########.fr       */
+/*   Updated: 2018/02/15 21:38:10 by ptyshevs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,20 @@ char	*read_fd(int fd)
 	while (ft_gnl_enchanced(fd, &buf, TRUE) > 0)
 		plaintext = ft_concat(plaintext, buf, TRUE);
 	return (plaintext);
+}
+
+t_node	*read_fd_to_list(int fd)
+{
+	t_node	*lst;
+	char	*buf;
+
+	lst = NULL;
+	while (ft_gnl_enchanced(fd, &buf, TRUE) > 0)
+	{
+		expand_n(&lst, buf, ft_slen(buf));
+		plaintext = ft_concat(plaintext, buf, TRUE);
+	}
+
 }
 
 /*

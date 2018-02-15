@@ -6,7 +6,7 @@
 /*   By: ptyshevs <ptyshevs@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/11 10:17:31 by ptyshevs          #+#    #+#             */
-/*   Updated: 2018/02/15 12:12:11 by ptyshevs         ###   ########.fr       */
+/*   Updated: 2018/02/15 16:32:56 by ptyshevs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,16 +55,16 @@ char	*append_pad(char *ret, t_uc *in, int pad, int i)
 
 char	*base64_encrypt(t_uc *in, int len)
 {
-	char	*ret;
-	int		i;
+	char			*ret;
+	int				i;
 	unsigned long	octet;
-	int		out_len;
-	int		pad;
+	int				out_len;
+	int				pad;
 
 	out_len = len + len / 3 + (len % 3 == 0 ? 0 : 1);
 	pad = (4 - ((out_len) % 4)) % 4;
 	out_len += (4 - (out_len % 4)) % 4;
-	ret = (char *)ft_strnew(out_len);
+	ret = ft_strnew(out_len);
 	i = 0;
 	while ((len -= 3) >= 0)
 	{
@@ -156,7 +156,7 @@ int		base64(t_options *options)
 	out = options->encrypt ? base64_encrypt(in, ft_slen((char*)in)) :
 							base64_decrypt(in, ft_slen((char*)in));
 	if (out)
-		output_base64(options->fd_to, out, options->encrypt);
+		output_base64(options->fd_to, (t_uc *)out, ft_slen((char *)in), options->encrypt);
 	free(out);
 	return (1);
 }

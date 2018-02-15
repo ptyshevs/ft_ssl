@@ -6,7 +6,7 @@
 /*   By: ptyshevs <ptyshevs@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 20:36:18 by ptyshevs          #+#    #+#             */
-/*   Updated: 2018/02/12 21:26:25 by ptyshevs         ###   ########.fr       */
+/*   Updated: 2018/02/15 18:03:04 by ptyshevs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,20 +40,27 @@ t_bool	is_valid_base64(char *s)
 ** @param      b64   Base64 string
 */
 
-void	output_base64(int fd, char *b64, t_bool x64)
+void	output_base64(int fd, t_uc *b64, int len, t_bool x64)
 {
 	int	cnt_lbreaks;
 
 	if (x64)
 	{
-		cnt_lbreaks = ft_slen(b64) / 64;
+		cnt_lbreaks = len / 64;
 		while (cnt_lbreaks--)
 		{
-			ft_dprintf(fd, "%.64s\n", b64);
+			write(fd, b64, 64);
+			write(fd, "\n", 1);
+			// ft_dprintf(fd, "%.64s\n", b64);
 			b64 += 64;
 		}
-		ft_dprintf(fd, "%s\n", b64);
+		write(fd, b64, len);
+		write(fd, "\n", 1);
+		// ft_dprintf(fd, "%s\n", b64);
 	}
 	else
-		ft_dprintf(fd, "%s", b64);
+	{
+		write(fd, b64, len);
+		// ft_dprintf(fd, "%s", b64);
+	}
 }
