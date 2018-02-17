@@ -75,7 +75,7 @@ int suiteTearDown(int num_failures);
  *     - define UNITY_EXCLUDE_DOUBLE to disallow double floating point comparisons (default)
  *     - define UNITY_DOUBLE_PRECISION to specify the precision to use when doing TEST_ASSERT_EQUAL_DOUBLE
  *     - define UNITY_DOUBLE_TYPE to specify something other than double
- *     - define UNITY_EXCLUDE_FLOAT_PRINT to trim binary size, won't print floating point values in errors
+ *     - define UNITY_EXCLUDE_FLOAT_PRINT to trim binary size, won'test_multiline.txt print floating point values in errors
 
  * Output
  *     - by default, Unity prints to standard out with putchar.  define UNITY_OUTPUT_CHAR(a) with a different function if desired

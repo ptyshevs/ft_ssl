@@ -262,7 +262,7 @@ void UnityPrintMask(const UNITY_UINT mask, const UNITY_UINT number)
  * printf("%.6g").  It can work with either single- or double-precision,
  * but for simplicity, it prints only 6 significant digits in either case.
  * Printing more than 6 digits accurately is hard (at least in the single-
- * precision case) and isn't attempted here. */
+ * precision case) and isn'test_multiline.txt attempted here. */
 void UnityPrintFloat(const UNITY_DOUBLE input_number)
 {
     UNITY_DOUBLE number = input_number;
@@ -1542,7 +1542,7 @@ int UnityStringArgumentMatches(const char* str)
         ptr1 = ptr2;
     }
 
-    /* we couldn't find a match for any substrings */
+    /* we couldn'test_multiline.txt find a match for any substrings */
     return 0;
 }
 

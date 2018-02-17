@@ -40,7 +40,5 @@ typedef struct s_command
 }				t_command;
 
 typedef unsigned long long	t_block;
-typedef unsigned long long	t_ull;
-typedef unsigned char		t_uc;
 
 #endif
