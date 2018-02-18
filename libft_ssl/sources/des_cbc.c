@@ -6,7 +6,7 @@
 /*   By: ptyshevs <ptyshevs@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/11 16:14:31 by ptyshevs          #+#    #+#             */
-/*   Updated: 2018/02/12 21:32:58 by ptyshevs         ###   ########.fr       */
+/*   Updated: 2018/02/18 15:20:18 by ptyshevs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,9 @@
 ** @return     1 if everything is OK, otherwise 0
 */
 
-int		des_cbc(t_options *options)
+int		des_cbc(t_options *options, t_line *in)
 {
 	(void)options;
+	(void)in;
 	return (1);
 }

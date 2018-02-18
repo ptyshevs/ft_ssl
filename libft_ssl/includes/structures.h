@@ -6,7 +6,7 @@
 /*   By: ptyshevs <ptyshevs@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 07:56:00 by ptyshevs          #+#    #+#             */
-/*   Updated: 2018/02/14 11:51:11 by ptyshevs         ###   ########.fr       */
+/*   Updated: 2018/02/18 13:00:00 by ptyshevs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ typedef struct	s_options
 typedef struct s_command
 {
 	char	*command_name;
-	int		(*f)(t_options *opt);
+	int		(*f)(t_options *opt, t_line *in);
 }				t_command;
 
 typedef unsigned long long	t_block;

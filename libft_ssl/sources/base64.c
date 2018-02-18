@@ -6,44 +6,12 @@
 /*   By: ptyshevs <ptyshevs@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/11 10:17:31 by ptyshevs          #+#    #+#             */
-/*   Updated: 2018/02/15 16:32:56 by ptyshevs         ###   ########.fr       */
+/*   Updated: 2018/02/18 15:29:41 by ptyshevs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ssl.h"
 #include "tools.h"
-
-/*
-** @brief      Add padding at the end of base64 string, if the last octet is not
-**             full.
-**
-** @param      ret   base64 string
-** @param      in    plaintext
-** @param      pad   padding - the number of '=' to be added
-** @param      i     current position in base64 string
-**
-** @return     base64 string with appended padding.
-*/
-
-char	*append_pad(char *ret, t_uc *in, int pad, int i)
-{
-	int	octet;
-	int	len;
-
-	if (pad)
-	{
-		octet = 0;
-		len = 4 - pad;
-		while (pad && len--)
-			octet = (octet << 8) + *in++;
-		octet = octet << (8 * (pad - 1));
-		ret[i] = 4 - pad > 0 ? g_it[(octet & 16515072) >> 18] : '=';
-		ret[i + 1] = 3 - pad > 0 ? g_it[(octet & 258048) >> 12] : '=';
-		ret[i + 2] = 2 - pad > 0 ? g_it[(octet & 4032) >> 6] : '=';
-		ret[i + 3] = 1 - pad > 0 ? g_it[octet & 63] : '=';
-	}
-	return (ret);
-}
 
 /*
 ** @brief      Encrypt plaintext into base64
@@ -53,51 +21,30 @@ char	*append_pad(char *ret, t_uc *in, int pad, int i)
 ** @return     base64 cipher text
 */
 
-char	*base64_encrypt(t_uc *in, int len)
+void	base64_encrypt(t_line *in, t_line *out)
 {
-	char			*ret;
-	int				i;
-	unsigned long	octet;
-	int				out_len;
-	int				pad;
+	long long	len;
+	int			i;
+	t_ull		octet;
+	size_t		j;
 
-	out_len = len + len / 3 + (len % 3 == 0 ? 0 : 1);
-	pad = (4 - ((out_len) % 4)) % 4;
-	out_len += (4 - (out_len % 4)) % 4;
-	ret = ft_strnew(out_len);
+	len = (long long)in->len;
+	out->len = (size_t)(len + len / 3 + (len % 3 == 0 ? 0 : 1));
+	out->len += (4 - (out->len % 4)) % 4;
+	out->str = ft_memalloc(out->len);
 	i = 0;
-	while ((len -= 3) >= 0)
+	j = 0;
+	while (len > 0)
 	{
-		octet = ((*in << 16) | (*(in + 1) << 8)) | *(in + 2);
-		in += 3;
-		ret[i++] = g_it[(octet >> 18) & 0x3F];
-		ret[i++] = g_it[(octet >> 12) & 0x3F];
-		ret[i++] = g_it[(octet >> 6) & 0x3F];
-		ret[i++] = g_it[octet & 0x3F];
+		octet = (in->str[j] << 16) | (j + 1 < in->len ?  (in->str[j + 1] << 8) : (t_ull)0);
+		octet |= j + 2 < in->len ? in->str[j + 2] : 0;
+		j += 3;
+		len -= 3;
+		out->str[i++] = g_it[(octet >> 18) & 0x3F];
+		out->str[i++] = g_it[(octet >> 12) & 0x3F];
+		out->str[i++] = len < -1 ? (char)'=' : g_it[(octet >> 6) & 0x3F];
+		out->str[i++] = len < 0 ? (char)'=' : g_it[octet & 0x3F];
 	}
-	return (append_pad(ret, in, pad, i));
-}
-
-/*
-** @brief      Map ASCII char to it's index in base64 index table.
-**
-** @param      c     char
-**
-** @return     The index.
-*/
-
-int		get_index(char c)
-{
-	int i;
-
-	i = 0;
-	while (i < 64)
-	{
-		if (g_it[i] == c)
-			return (i);
-		i++;
-	}
-	return (0);
 }
 
 /*
@@ -108,33 +55,30 @@ int		get_index(char c)
 ** @return     Plaintext
 */
 
-char	*base64_decrypt(t_uc *in, int len)
+void	base64_decrypt(t_line *in, t_line *out)
 {
-	char	*ret;
-	int		octet;
-	int		i;
+	long long	len;
+	int			j;
+	int			octet;
+	size_t		k;
 
-	ret = ft_strnew(len - len / 4);
-	i = 0;
+	len = (long long)in->len;
+	out->str = (t_uc *)ft_strnew(in->len - in->len / 4);
+	k = 0;
 	while ((len -= 4) >= 0)
 	{
-		while (*in == '\n')
-			in++;
-		octet = (get_index(*in++) << 18);
-		while (*in == '\n')
-			in++;
-		octet += (get_index(*in++) << 12);
-		while (*in == '\n')
-			in++;
-		octet += get_index(*in++) << 6;
-		while (*in == '\n')
-			in++;
-		octet += get_index(*in++);
-		ret[i++] = (octet & 16711680) >> 16;
-		ret[i++] = (octet & 65280) >> 8;
-		ret[i++] = octet & 255;
+		j = 3;
+		octet = 0;
+		while (j >= 0)
+		{
+			while (k < in->len && !ft_strchr((char *)g_it, in->str[k]))
+				k++;
+			octet += ft_strchr((char *)g_it, in->str[k])[0] << (6 * j--);
+		}
+		j = 2;
+		while (j >= 0)
+			out->str[out->len++] = (t_uc)((octet >> (8 * j--)) & 255);
 	}
-	return (ret);
 }
 
 /*
@@ -147,16 +91,13 @@ char	*base64_decrypt(t_uc *in, int len)
 ** @return     1 if success, anything else otherwise (like, really, anything)
 */
 
-int		base64(t_options *options)
+int		base64(t_options *options, t_line *in)
 {
-	t_uc	*in;
-	char	*out;
+	t_line	*out;
 
-	in = (t_uc *)read_fd(options->fd_from);
-	out = options->encrypt ? base64_encrypt(in, ft_slen((char*)in)) :
-							base64_decrypt(in, ft_slen((char*)in));
-	if (out)
-		output_base64(options->fd_to, (t_uc *)out, ft_slen((char *)in), options->encrypt);
-	free(out);
+	out = init_line();
+	options->encrypt ? base64_encrypt(in, out) : base64_decrypt(in, out);
+	out ? out_base64(options->fd_to, out, options->encrypt) : NULL;
+	clean_t_line(&out);
 	return (1);
 }

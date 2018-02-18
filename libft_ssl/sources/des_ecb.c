@@ -6,7 +6,7 @@
 /*   By: ptyshevs <ptyshevs@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/11 15:58:45 by ptyshevs          #+#    #+#             */
-/*   Updated: 2018/02/15 19:44:47 by ptyshevs         ###   ########.fr       */
+/*   Updated: 2018/02/18 15:20:09 by ptyshevs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include "tools.h"
 #include <fcntl.h>
 
-unsigned long	split_block(t_ull block, t_bool left)
+t_ull	split_block(t_ull block, t_bool left)
 {
 	return ((left ? block >> 32 : block) & 0xFFFFFFFF);
 }
@@ -102,8 +102,7 @@ t_ull	key_compress_permut(t_ull key)
 ** @return     Number with bits rotated
 */
 
-unsigned long long ft_rot(unsigned long long num, unsigned long long mask,
-					int shift, t_bool left)
+t_ull ft_rot(t_ull num, t_ull mask, int shift, t_bool left)
 {
 	if (left)
 		return (((num << shift) | (num >> (28 - shift))) & mask);
@@ -309,47 +308,44 @@ t_ull	add_padding(t_uc *remainder, int value)
 	return (block);
 }
 
-char	*des_ecb_encrypt(t_uc *in, t_ull *keys)
+void	des_ecb_encrypt(t_line *in, t_line *out, t_ull *keys)
 {
-	t_uc	*out;
 	int		len;
 	int		i;
 	t_ull	block;
 
 	len = ft_slen((char *)in);
-	out = (t_uc *)ft_strnew(len + (len % 8 == 0 ? 8 : 8 - (len % 8)));
+	out->str = (t_uc *)ft_strnew(len + (len % 8 == 0 ? 8 : 8 - (len % 8)));
 	i = 0;
 	while ((len -= 8) >= 0)
 	{
-		block = str_to_block(in);
+		block = str_to_block(in->str);
 		in += 8;
 		block = des_ecb_encrypt_block(keys, block);
-		block_to_str(block, out, i, FALSE);
+		block_to_str(block, out->str, i, FALSE);
 		i += 8;
 	}
 	block = add_padding((t_uc *)in, 8 + len == 0 ? 8 : -len);
-	block_to_str(des_ecb_encrypt_block(keys, block), out, i, FALSE);
-	return ((char *)out);
+	block_to_str(des_ecb_encrypt_block(keys, block), out->str, i, FALSE);
 }
 
-char	*des_ecb_decrypt(t_uc *in, t_ull *keys)
+void	des_ecb_decrypt(t_line *in, t_line *out, t_ull *keys)
 {
-	t_uc	*out;
 	int		len;
 	int		i;
 	t_ull	block;
 
 	len = ft_slen((char *)in);
-	out = (t_uc *)ft_strnew(len + (len % 8 == 0 ? 8 : 8 - (len % 8)));
+	out->str = (t_uc *)ft_strnew(len + (len % 8 == 0 ? 8 : 8 - (len % 8)));
 	i = 0;
 	ft_printf("len: %d | len %% 8: %d\n", len, len % 8);
 	while ((len -= 8) >= 0)
 	{
-		block = str_to_block(in);
+		block = str_to_block(in->str);
 
 		in += 8;
 		block = des_ecb_encrypt_block(keys, block);
-		block_to_str(block, out, i, len == 0);
+		block_to_str(block, out->str, i, len == 0);
 		i += 8;
 	}
 	ft_printf("len: %d\n", len);
@@ -361,7 +357,6 @@ char	*des_ecb_decrypt(t_uc *in, t_ull *keys)
 	// int last_byte = block & 63;
 	// ft_printf("last byte: %08b\n", last_byte);
 	// block_to_str(des_ecb_encrypt_block(keys, block), out, i);
-	return ((char *)out);
 }
 
 /*
@@ -372,44 +367,41 @@ char	*des_ecb_decrypt(t_uc *in, t_ull *keys)
 ** @return     1 if everything okay, anything else otherwise
 */
 
-int		des_ecb(t_options *options)
+int		des_ecb(t_options *options, t_line *in)
 {
 	t_ull	keys[16];
-	unsigned long	out_len;
-	t_uc	*in;
-	char	*out;
-	t_uc	*tmp;
+	t_line	*out;
+	t_line	*tmp;
 
-	in = (t_uc *)read_fd(options->fd_from);
-	tmp = in;
+	out = init_line();
+	tmp = init_line();
 	if (!options->key_provided)
 		read_key(options);
 	get_subkeys(keys, options->key, options->encrypt);
 	if (options->base64 && !options->encrypt)
 	{
-		tmp = in;
-		in = (t_uc *)base64_decrypt(in, ft_slen((char *)in));
-		free(tmp);
+		base64_decrypt(in, tmp);
+		clean_t_line(&in);
+		in = tmp;
 	}
 	if (!options->encrypt)
 		ft_printf("input length: %d\n", ft_slen((char *)in));
-	out = options->encrypt ?	des_ecb_encrypt(in, keys) :
-								des_ecb_decrypt(in, keys);
+	options->encrypt ?	des_ecb_encrypt(in, out, keys) : des_ecb_decrypt(in, out, keys);
 	if (out)
 	{
-		out_len = ft_slen((char *)in);
-		out_len += out_len % 8 == 0 ? 8 : 8 - (out_len % 8);
+		out->len = ft_slen((char *)in);
+		out->len += out->len % 8 == 0 ? 8 : 8 - (out->len % 8);
 		if (options->base64 && options->encrypt)
 		{
 			ft_printf("here\n");
-			tmp = (t_uc *)out;
-			out = base64_encrypt((t_uc *)out, out_len);
-			out_len = ft_slen(out);
-			free(tmp);
+			tmp = out;
+			base64_encrypt(out, out);
+			clean_t_line(&tmp);
 		}
-		options->base64 ? output_base64(options->fd_to, (t_uc *)out, out_len, options->encrypt) :
-				write(options->fd_to, out, out_len);
+		options->base64 ? out_base64(options->fd_to, out, options->encrypt) :
+				write(options->fd_to, out->str, out->len);
 	}
-	free(out);
+	clean_t_line(&tmp);
+	clean_t_line(&out);
 	return (1);
 }

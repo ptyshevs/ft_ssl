@@ -6,7 +6,7 @@
 /*   By: ptyshevs <ptyshevs@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/11 11:58:14 by ptyshevs          #+#    #+#             */
-/*   Updated: 2018/02/13 18:16:36 by ptyshevs         ###   ########.fr       */
+/*   Updated: 2018/02/18 14:51:35 by ptyshevs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,29 +71,27 @@ t_options	*parse_options(t_args *args)
 void		dispatch(t_args *args)
 {
 	t_options	*opt;
-	char		**options_tmp;
 	int			i;
+	t_line		*in;
 
-	options_tmp = args->options;
 	opt = parse_options(args);
+	in = ft_read_fd_to_line(opt->fd_from);
 	i = 0;
 	while (g_implemented_commands[i].command_name)
 	{
 		if (ft_strequ(g_implemented_commands[i].command_name, args->command))
 		{
-			if (!g_implemented_commands[i].f(opt))
+			if (!g_implemented_commands[i].f(opt, in))
 				ft_dprintf(2, "Smth went wrong with %s encryption function\n",
 					args->command);
 			break ;
 		}
 		i++;
 	}
-	if (opt->fd_from != 0)
-		close(opt->fd_from);
-	if (opt->fd_to != 1)
-		close(opt->fd_to);
+	close(opt->fd_from);
+	close(opt->fd_to);
+	clean_t_line(&in);
 	free(opt);
-	free(options_tmp);
 	free(args);
 }
 

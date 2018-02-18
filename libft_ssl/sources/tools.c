@@ -6,37 +6,70 @@
 /*   By: ptyshevs <ptyshevs@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 09:03:42 by ptyshevs          #+#    #+#             */
-/*   Updated: 2018/02/15 21:38:10 by ptyshevs         ###   ########.fr       */
+/*   Updated: 2018/02/18 12:53:24 by ptyshevs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ssl.h"
 #include "tools.h"
 
-char	*read_fd(int fd)
+t_line	*ft_read_fd_to_line(int fd)
 {
-	char	*plaintext;
-	char	*buf;
+	t_uc	buf[8000];
+	t_line	*content;
+	t_ull	size;
+	int		r;
 
-	plaintext = NULL;
-	while (ft_gnl_enchanced(fd, &buf, TRUE) > 0)
-		plaintext = ft_concat(plaintext, buf, TRUE);
-	return (plaintext);
-}
-
-t_node	*read_fd_to_list(int fd)
-{
-	t_node	*lst;
-	char	*buf;
-
-	lst = NULL;
-	while (ft_gnl_enchanced(fd, &buf, TRUE) > 0)
+	content = init_line();
+	size = 1;
+	while ((r = read(fd, buf, 8000)) > 0)
 	{
-		expand_n(&lst, buf, ft_slen(buf));
-		plaintext = ft_concat(plaintext, buf, TRUE);
+		while (content->len + r >= size)
+		{
+			content->str = ft_realloc(content->str, content->len,
+									size * 2, TRUE);
+			size *= 2;
+		}
+		ft_memcpy(content->str + content->len, buf, r);
+		content->len += r;
 	}
-
+	return (content);
 }
+
+/*
+** @brief      Format base64 encrypt/decrypt string as it is in OpenSSL:
+**             newline every 64 characters + at the end of string
+** @param      fd    file descriptior to write to
+** @param      b64   Base64 string
+*/
+
+void	out_base64(int fd, t_line *b64, t_bool x64)
+{
+	long long	cnt_lbreaks;
+	int			shift;
+
+	shift = 0;
+	if (x64)
+	{
+		cnt_lbreaks = (long long) (b64->len / 64);
+		while (cnt_lbreaks--)
+		{
+			write(fd, b64->str + shift, 64);
+			write(fd, "\n", 1);
+			// ft_dprintf(fd, "%.64s\n", b64);
+			shift += 64;
+		}
+		write(fd, b64->str + shift, &b64->str[b64->len] - (b64->str + shift));
+		write(fd, "\n", 1);
+		// ft_dprintf(fd, "%s\n", b64);
+	}
+	else
+	{
+		write(fd, b64->str, b64->len);
+		// ft_dprintf(fd, "%s", b64);
+	}
+}
+
 
 /*
 ** @brief      Read the key from stdin.

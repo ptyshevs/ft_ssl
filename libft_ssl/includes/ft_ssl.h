@@ -6,7 +6,7 @@
 /*   By: ptyshevs <ptyshevs@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/11 10:14:24 by ptyshevs          #+#    #+#             */
-/*   Updated: 2018/02/15 11:23:45 by ptyshevs         ###   ########.fr       */
+/*   Updated: 2018/02/18 14:50:58 by ptyshevs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,12 @@
 # include <stdio.h>  // Don't forget to remove
 
 
-int		base64(t_options *options);
-int		des_ecb(t_options *options);
-int		des_cbc(t_options *options);
+int		base64(t_options *options, t_line *in);
+int		des_ecb(t_options *options, t_line *in);
+int		des_cbc(t_options *options, t_line *in);
 
-char	*base64_encrypt(t_uc *in, int len);
-char	*base64_decrypt(t_uc *in, int len);
+void	base64_encrypt(t_line *in, t_line *out);
+void	base64_decrypt(t_line *in, t_line *out);
 
 char	*des_ecb_encode(char *plaintext);
 char	*des_ecb_decode(char *ciphertext);
