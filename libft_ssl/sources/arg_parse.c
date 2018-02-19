@@ -75,10 +75,15 @@ void		dispatch(t_args *args)
 	t_line		*in;
 
 	opt = parse_options(args);
-	in = ft_read_fd_to_line(opt->fd_from);
-	i = 0;
-	while (g_implemented_commands[i].command_name)
+	if (!(in = ft_read_fd_to_line(opt->fd_from))->str)
 	{
+		clean_t_line(&in);
+		free(opt);
+		free(args);
+		return ;
+	}
+	i = -1;
+	while (g_implemented_commands[++i].command_name)
 		if (ft_strequ(g_implemented_commands[i].command_name, args->command))
 		{
 			if (!g_implemented_commands[i].f(opt, in))
@@ -86,10 +91,6 @@ void		dispatch(t_args *args)
 					args->command);
 			break ;
 		}
-		i++;
-	}
-	close(opt->fd_from);
-	close(opt->fd_to);
 	clean_t_line(&in);
 	free(opt);
 	free(args);
