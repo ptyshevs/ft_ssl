@@ -25,7 +25,7 @@ void	base64_encrypt(t_line *in, t_line *out)
 {
 	long long	len;
 	int			i;
-	t_ull		octet;
+	int			octet;
 	size_t		j;
 
 	len = (long long)in->len;
@@ -36,7 +36,7 @@ void	base64_encrypt(t_line *in, t_line *out)
 	j = 0;
 	while (len > 0)
 	{
-		octet = (in->str[j] << 16) | (j + 1 < in->len ?  (in->str[j + 1] << 8) : (t_ull)0);
+		octet = in->str[j] << 16 | (j + 1 < in->len ? in->str[j + 1] << 8 : 0);
 		octet |= j + 2 < in->len ? in->str[j + 2] : 0;
 		j += 3;
 		len -= 3;
@@ -63,21 +63,22 @@ void	base64_decrypt(t_line *in, t_line *out)
 	size_t		k;
 
 	len = (long long)in->len;
-	out->str = (t_uc *)ft_strnew(in->len - in->len / 4);
+	out->str = ft_memalloc(in->len - in->len / 4);
 	k = 0;
 	while ((len -= 4) >= 0)
 	{
 		j = 3;
 		octet = 0;
-		while (j >= 0)
+		while (j-- >= 0)
 		{
-			while (k < in->len && !ft_strchr((char *)g_it, in->str[k]))
+			while (k < in->len && !ft_strchr(g_b64, in->str[k]))
 				k++;
-			octet += ft_strchr((char *)g_it, in->str[k])[0] << (6 * j--);
+			k >= in->len ? 0 :
+			(octet |= (ft_strchr(g_b64, in->str[k++]) - g_b64) << 6 * (j + 1));
 		}
 		j = 2;
-		while (j >= 0)
-			out->str[out->len++] = (t_uc)((octet >> (8 * j--)) & 255);
+		while (j-- >= 0)
+			out->str[out->len++] = (t_uc)(octet >> (8 * (j + 1)) & 255);
 	}
 }
 
