@@ -13,25 +13,30 @@
 #include "ft_ssl.h"
 #include "tools.h"
 
-t_line	*ft_read_fd_to_line(int fd)
+t_line	*ft_read_fd_to_line(int fd, t_bool ignore_newlines)
 {
 	t_uc	buf[8000];
 	t_line	*content;
 	t_ull	size;
-	int		r;
+	ssize_t	r;
+	int		i;
 
 	content = init_line();
 	size = 1;
 	while ((r = read(fd, buf, 8000)) > 0)
 	{
+		i = 0;
 		while (content->len + r >= size)
 		{
 			content->str = ft_realloc(content->str, content->len,
 									size * 2, TRUE);
 			size *= 2;
 		}
-		ft_memcpy(content->str + content->len, buf, r);
-		content->len += r;
+		while (ignore_newlines && i < r)
+			if (buf[i++] != '\n')
+				content->str[content->len++] = buf[i - 1];
+		!ignore_newlines ? ft_memcpy(content->str + content->len, buf, r) : 0;
+		content->len += ignore_newlines ? 0 : r;
 	}
 	return (content);
 }
@@ -55,19 +60,14 @@ void	out_base64(int fd, t_line *b64, t_bool x64)
 		while (cnt_lbreaks--)
 		{
 			write(fd, b64->str + shift, 64);
-			write(fd, "\n", 1);
-			// ft_dprintf(fd, "%.64s\n", b64);
+			write(fd, "\n", cnt_lbreaks > 0 ? 1 : 0);
 			shift += 64;
 		}
 		write(fd, b64->str + shift, &b64->str[b64->len] - (b64->str + shift));
 		write(fd, "\n", 1);
-		// ft_dprintf(fd, "%s\n", b64);
 	}
 	else
-	{
 		write(fd, b64->str, b64->len);
-		// ft_dprintf(fd, "%s", b64);
-	}
 }
 
 

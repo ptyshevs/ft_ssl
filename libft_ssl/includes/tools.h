@@ -22,7 +22,7 @@ static t_uc	*g_it = \
 static char	*g_b64 = \
 "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
-t_line				*ft_read_fd_to_line(int fd);
+t_line				*ft_read_fd_to_line(int fd, t_bool ignore_newlines);
 void				read_key(t_options *options);
 
 int					get_index(char c);

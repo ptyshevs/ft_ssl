@@ -75,7 +75,7 @@ void		dispatch(t_args *args)
 	t_line		*in;
 
 	opt = parse_options(args);
-	if (!(in = ft_read_fd_to_line(opt->fd_from))->str)
+	if (!(in = ft_read_fd_to_line(opt->fd_from, (t_bool) (!opt->encrypt && opt->base64)))->str)
 	{
 		clean_t_line(&in);
 		free(opt);

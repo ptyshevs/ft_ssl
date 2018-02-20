@@ -333,8 +333,7 @@ void	des_ecb_decrypt(t_line *in, t_line *out, t_ull *keys)
 	t_ull		block;
 
 	len = (long long)in->len;
-	out->len = in->len;
-	out->str = ft_memalloc(out->len);
+	out->str = ft_memalloc(in->len);
 	i = 0;
 	while ((len -= 8) >= 0)
 	{
@@ -344,8 +343,6 @@ void	des_ecb_decrypt(t_line *in, t_line *out, t_ull *keys)
 		i += 8;
 	}
 	out->len = i - out->str[i - 1];
-//	block = add_padding(in->str + i, 8 + len == 0 ? 8 : -len);
-//	 block_to_str(block, out, i, TRUE);
 }
 
 /*
@@ -372,7 +369,7 @@ int		des_ecb(t_options *options, t_line *in)
 	if (options->base64 && !options->encrypt)
 	{
 		base64_decrypt(in, tmp);
-		ft_t_line_replace(in, tmp);
+		ft_tline_replace(in, tmp);
 	}
 	options->encrypt ?	des_ecb_encrypt(in, out, keys) : des_ecb_decrypt(in, out, keys);
 	if (out)
@@ -380,7 +377,7 @@ int		des_ecb(t_options *options, t_line *in)
 		if (options->base64 && options->encrypt)
 		{
 			base64_encrypt(out, tmp);
-			ft_t_line_replace(out, tmp);
+			ft_tline_replace(out, tmp);
 		}
 		options->base64 ? out_base64(options->fd_to, out, options->encrypt) :
 				write(options->fd_to, out->str, out->len);
