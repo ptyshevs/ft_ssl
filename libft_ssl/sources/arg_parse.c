@@ -75,7 +75,6 @@ void		dispatch(t_args *args)
 	t_line		*in;
 
 	opt = parse_options(args);
-	ask_key_vector(args, opt);
 	if (!(in = ft_read_fd_to_line(opt->fd_from, (t_bool) (!opt->encrypt && opt->base64)))->str)
 	{
 		clean_t_line(&in);
@@ -83,6 +82,7 @@ void		dispatch(t_args *args)
 		free(args);
 		return ;
 	}
+	ask_key_vector(args, opt);
 	i = -1;
 	while (g_implemented_commands[++i].command_name)
 		if (ft_strequ(g_implemented_commands[i].command_name, args->command))

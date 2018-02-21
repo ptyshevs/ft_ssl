@@ -115,8 +115,6 @@ int		des_ecb(t_options *options, t_line *in)
 	if (!in->str)
 		return (1);
 	out = init_line();
-	if (!options->key_provided)
-		read_key(options);
 	get_subkeys(keys, options->key, options->encrypt);
 	if (options->base64 && !options->encrypt)
 	{
