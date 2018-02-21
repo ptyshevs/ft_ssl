@@ -13,6 +13,8 @@
 #ifndef PERMUTATIONS_H
 # define PERMUTATIONS_H
 
+#include "libft.h"
+
 static unsigned char	g_init_permut[64] =
 {
 	58, 50, 42, 34, 26, 18, 10, 2, 60, 52, 44, 36, 28, 20, 12, 4,
@@ -115,5 +117,11 @@ static unsigned char	g_final_permut[64] =
 	36, 4, 44, 12, 52, 20, 60, 28, 35, 3, 43, 11, 51, 19, 59, 27,
 	34, 2, 42, 10, 50, 18, 58, 26, 33, 1, 41, 9, 49, 17, 57, 25
 };
+
+t_ull		init_permut(t_ull block);
+t_ull		key_permut(t_ull key);
+t_ull		key_compress_permut(t_ull key);
+t_ull		pbox_permut(t_ull block);
+t_ull		final_permut(t_ull block);
 
 #endif

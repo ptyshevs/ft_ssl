@@ -70,6 +70,24 @@ void	out_base64(int fd, t_line *b64, t_bool x64)
 		write(fd, b64->str, b64->len);
 }
 
+void	out_des(t_options *options, t_line *out)
+{
+	t_line	*tmp;
+
+	tmp = init_line();
+	if (out->str)
+	{
+		if (options->base64 && options->encrypt)
+		{
+			base64_encrypt(out, tmp);
+			ft_tline_replace(out, tmp);
+		}
+		options->base64 ? out_base64(options->fd_to, out, options->encrypt) :
+		write(options->fd_to, out->str, out->len);
+	}
+	clean_t_line(&tmp);
+}
+
 
 /*
 ** @brief      Read the key from stdin.
@@ -97,3 +115,4 @@ void	read_key(t_options *options)
 	options->key = parse_hex(valid_hex(pad_key(key), "key"));
 	free(key);
 }
+
