@@ -69,7 +69,8 @@ LIBSSL_HEADNAMES = ft_ssl structures arg_parse tools permutations
 LIBSSL_HEADERS = $(patsubst %, $(LIBSSL_INCDIR)/%.h, $(LIBSSL_HEADNAMES))
 
 LIBSSL_FILENAMES =	arg_parse num_parse arg_display tools \
-					base64 des_ecb des_cbc des_tools des_tools_more permutations
+					base64 des_ecb des_cbc des_tools des_tools_more permutations \
+					des3_ecb des3_cbc
 LIBSSL_CFILES = $(patsubst %, $(LIBSSL_SRCDIR)/%.c, $(LIBSSL_FILENAMES))
 LIBSSL_OFILES = $(patsubst %, $(ODIR)/%.o, $(LIBSSL_FILENAMES))
 

@@ -115,7 +115,7 @@ int		des_ecb(t_options *options, t_line *in)
 	if (!in->str)
 		return (1);
 	out = init_line();
-	get_subkeys(keys, options->key, options->encrypt);
+	get_subkeys(keys, parse_hex(pad_key(options->key, 16)) , options->encrypt);
 	if (options->base64 && !options->encrypt)
 	{
 		base64_decrypt(in, (tmp = init_line()));

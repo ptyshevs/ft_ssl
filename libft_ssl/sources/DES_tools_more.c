@@ -38,7 +38,8 @@ void	ask_key_vector(t_args *args, t_options *options)
 	{
 		if (!options->key_provided)
 			read_key(options);
-		if (!options->iv_provided)
+		if (!options->iv_provided && (ft_strequ(args->command, "des-cbc") ||
+				ft_strequ(args->command, "des3-cbc")))
 			read_iv(options);
 	}
 }
@@ -66,7 +67,7 @@ void	read_key(t_options *options)
 	}
 	else if (*key == '\0')
 		exit(0);
-	options->key = parse_hex(valid_hex(pad_key(key), "key"));
+	options->key = valid_hex(key, "key");
 	free(key);
 }
 
@@ -84,6 +85,6 @@ void	read_iv(t_options *options)
 	}
 	else if (*iv == '\0')
 		exit(0);
-	options->iv = parse_hex(valid_hex(pad_key(iv), "iv"));
+	options->iv = parse_hex(valid_hex(pad_key(iv, 16), "iv"));
 	free(iv);
 }

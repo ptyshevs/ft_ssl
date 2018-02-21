@@ -25,9 +25,9 @@ typedef struct	s_options
 {
 	int					fd_to;
 	int					fd_from;
-	unsigned long long	key; // des key in hex
+	char				*key;
 	t_bool				key_provided;
-	unsigned long long	iv; // initial vector for des-cbc
+	unsigned long long	iv;
 	t_bool				iv_provided;
 	t_bool				base64;
 	t_bool				encrypt;

@@ -44,19 +44,21 @@ unsigned long long	parse_hex(char *nbr)
 {
 	unsigned long long	res;
 	char				*tmp;
+	size_t				i;
 
 	tmp = nbr;
 	res = 0;
-	while (*nbr)
+	i = 0;
+	while (i < 16)
 	{
 		res *= 16;
-		if (*nbr >= 48 && *nbr <= 57)
-			res += *nbr - '0';
-		else if (*nbr >= 65 && *nbr <= 70)
-			res += 10 + *nbr - 'A';
-		else if (*nbr >= 97 && *nbr <= 102)
-			res += 10 + *nbr - 'a';
-		nbr++;
+		if (nbr[i] >= 48 && nbr[i] <= 57)
+			res += nbr[i] - '0';
+		else if (nbr[i] >= 65 && nbr[i] <= 70)
+			res += 10 + nbr[i] - 'A';
+		else if (nbr[i] >= 97 && nbr[i] <= 102)
+			res += 10 + nbr[i] - 'a';
+		i++;
 	}
 	free(tmp);
 	return (res);
@@ -70,16 +72,16 @@ unsigned long long	parse_hex(char *nbr)
 ** @param      key   The key
 */
 
-char	*pad_key(char *key)
+char	*pad_key(char *key, size_t len)
 {
 	char *tmp;
 
-	key = ft_slen(key) > 16 ? ft_sprintf("%.16s", key) : ft_strdup(key);
-	if (ft_slen(key) < 16)
+	key = ft_sprintf("%.*s", len, key);
+	if (ft_slen(key) < len)
 	{
-		tmp = ft_strtrunc("0000000000000000", 16 - ft_slen(key), FALSE);
+		tmp = ft_strnew(48);
+		ft_memset(tmp, '0', len - ft_slen(key));
 		key = ft_concat(key, tmp, TRUE);
 	}
-
 	return (key);
 }

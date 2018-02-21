@@ -15,7 +15,9 @@
 
 int		main(int ac, char **av)
 {
-	t_args *args = arg_parse(ac, av);
+	t_args *args;
+
+	args = arg_parse(ac, av);
 	if (is_valid_command(args))
 		dispatch(args);
 	else

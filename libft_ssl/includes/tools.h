@@ -44,6 +44,6 @@ void				out_des(t_options *options, t_line *out);
 
 char				*valid_hex(char *nbr, char *type);
 unsigned long long	parse_hex(char *nbr);
-char				*pad_key(char *key);
+char				*pad_key(char *key, size_t len);
 
 #endif
