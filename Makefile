@@ -53,7 +53,7 @@ LIBFT_FILENAMES =	ft_putnbr ft_putchar ft_putstr ft_isalpha ft_atoi ft_bzero \
 		ft_printf_parsers ft_printf_posargs ft_printf_put_misc ft_printf_put_numbers \
 		ft_printf_put_strings ft_lstpush ft_startswith ft_endswith ft_sjoin ft_concat \
 		ft_strtrunc ft_gnl_v2 ft_memsub ft_realloc ft_memjoin ft_free_and_ret \
-		ft_tline_replace ft_tline_join
+		ft_tline_replace ft_tline_join ft_message_and_exit
 
 LIBFT_CFILES = $(patsubst %, $(LIBFT_SRCDIR)/%.c, $(LIBFT_FILENAMES))
 LIBFT_OFILES = $(patsubst %, $(ODIR)/$(LIBFT_DIR)/%.o, $(LIBFT_FILENAMES))

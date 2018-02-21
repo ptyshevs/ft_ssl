@@ -23,7 +23,9 @@ static char	*g_b64 = \
 "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
 t_line				*ft_read_fd_to_line(int fd, t_bool ignore_newlines);
+void				ask_key_vector(t_args *args, t_options *options);
 void				read_key(t_options *options);
+void				read_iv(t_options *options);
 
 t_ull				split_block(t_ull block, t_bool left);
 void				block_to_str(t_ull block, t_line *out, int j,
@@ -33,8 +35,6 @@ t_ull				str_to_block(t_uc *str);
 t_ull				ft_rot(t_ull num, t_ull mask, int shift, t_bool left);
 void				get_subkeys(t_ull *keys, t_ull key, t_bool encrypt);
 t_ull				expand_block(t_ull block);
-
-
 
 int					get_index(char c);
 void				out_base64(int fd, t_line *b64, t_bool x64);

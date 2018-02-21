@@ -60,7 +60,7 @@ t_options	*parse_options(t_args *args)
 	(opt->key = parse_hex(valid_hex(pad_key(*(args->options++ + 1)), "key")));
 		else if (ft_strequ(*args->options, "-v") && (opt->iv_provided = TRUE))
 			*(args->options + 1) == NULL ? display_options_and_exit(NULL) :
-			(opt->iv = parse_hex(valid_hex(*(args->options++ + 1), "iv")));
+	(opt->iv = parse_hex(valid_hex(pad_key(*(args->options++ + 1)), "iv")));
 		else
 			display_options_and_exit(*args->options);
 		args->options++;
@@ -75,6 +75,7 @@ void		dispatch(t_args *args)
 	t_line		*in;
 
 	opt = parse_options(args);
+	ask_key_vector(args, opt);
 	if (!(in = ft_read_fd_to_line(opt->fd_from, (t_bool) (!opt->encrypt && opt->base64)))->str)
 	{
 		clean_t_line(&in);

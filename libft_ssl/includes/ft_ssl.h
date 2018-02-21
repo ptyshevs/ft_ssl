@@ -15,6 +15,7 @@
 
 # include "structures.h"
 # include "libft.h"
+# include "tools.h"
 # include <stdio.h>  // Don't forget to remove
 
 
@@ -25,8 +26,11 @@ int		des_cbc(t_options *options, t_line *in);
 void	base64_encrypt(t_line *in, t_line *out);
 void	base64_decrypt(t_line *in, t_line *out);
 
-char	*des_ecb_encode(char *plaintext);
-char	*des_ecb_decode(char *ciphertext);
+t_ull	des_ecb_encrypt_block(t_ull *keys, t_ull block);
+void	des_ecb_encrypt(t_line *in, t_line *out, t_ull *keys);
+void	des_ecb_decrypt(t_line *in, t_line *out, t_ull *keys);
+
+
 
 char	*des_cbc_encode(char *plaintext);
 char	*des_cbc_decode(char *ciphertext);

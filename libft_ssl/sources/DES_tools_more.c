@@ -28,3 +28,17 @@ t_ull	str_to_block(t_uc *str)
 		block = (block << 8) | *str++;
 	return (block);
 }
+
+void	ask_key_vector(t_args *args, t_options *options)
+{
+	if (ft_strequ(args->command, "des-cbc") &&
+		options->key_provided && !options->iv_provided)
+		ft_message_and_exit("iv undefined", 2, 1);
+	if (!ft_strequ(args->command, "base64"))
+	{
+		if (!options->key_provided)
+			read_key(options);
+		if (!options->iv_provided)
+			read_iv(options);
+	}
+}

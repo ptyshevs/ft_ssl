@@ -116,3 +116,20 @@ void	read_key(t_options *options)
 	free(key);
 }
 
+void	read_iv(t_options *options)
+{
+	char	*iv;
+
+	ft_printf("enter initial vector: ");
+	freopen("/dev/tty", "r", stdin);
+	ft_gnl(0, &iv);
+	if (iv == NULL)
+	{
+		ft_dprintf(2, "\nbad iv read\n");
+		exit(1);
+	}
+	else if (*iv == '\0')
+		exit(0);
+	options->iv = parse_hex(valid_hex(pad_key(iv), "iv"));
+	free(iv);
+}
