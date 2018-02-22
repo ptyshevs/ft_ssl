@@ -35,7 +35,7 @@ t_ull				str_to_block(t_uc *str);
 t_ull				add_padding(t_uc *remainder, long long value);
 
 t_ull				ft_rot(t_ull num, t_ull mask, int shift, t_bool left);
-void				get_subkeys(t_ull *keys, t_ull key, t_bool encrypt);
+t_ull * get_subkeys(t_ull *keys, t_ull key, t_bool encrypt);
 t_ull				expand_block(t_ull block);
 
 int					get_index(char c);

@@ -28,7 +28,7 @@ int		des3_cbc(t_options *options, t_line *in);
 void	base64_encrypt(t_line *in, t_line *out);
 void	base64_decrypt(t_line *in, t_line *out);
 
-t_ull	des_ecb_encrypt_block(t_ull *keys, t_ull block);
+t_ull	des_ecrypt_block(t_ull *keys, t_ull block);
 void	des_ecb_encrypt(t_line *in, t_line *out, t_ull *keys);
 void	des_ecb_decrypt(t_line *in, t_line *out, t_ull *keys);
 

@@ -25,13 +25,13 @@ void	des3_cbc_encrypt(t_line *in, t_line *out, t_ull *keys, t_ull iv)
 	while ((len -= 8) >= 0)
 	{
 		block = str_to_block(in->str + i) ^ iv;
-		block = des_ecb_encrypt_block(keys, block);
+		block = des_ecrypt_block(keys, block);
 		iv = block;
 		block_to_str(block, out, i, FALSE);
 		i += 8;
 	}
 	block = add_padding(in->str + i, 8 + len == 0 ? 8 : -len) ^ iv;
-	block_to_str(des_ecb_encrypt_block(keys, block), out, i, FALSE);
+	block_to_str(des_ecrypt_block(keys, block), out, i, FALSE);
 }
 
 void	des3_cbc_decrypt(t_line *in, t_line *out, t_ull *keys, t_ull iv)
@@ -48,7 +48,7 @@ void	des3_cbc_decrypt(t_line *in, t_line *out, t_ull *keys, t_ull iv)
 	{
 		block = str_to_block(in->str + i);
 		prev_block = block;
-		block = des_ecb_encrypt_block(keys, block) ^ iv;
+		block = des_ecrypt_block(keys, block) ^ iv;
 		iv = prev_block;
 		block_to_str(block, out, (int)i, FALSE);
 		i += 8;

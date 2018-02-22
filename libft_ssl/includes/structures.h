@@ -40,5 +40,6 @@ typedef struct s_command
 }				t_command;
 
 typedef unsigned long long	t_block;
+typedef t_ull				(*t_mode)(t_ull block, void *keys);
 
 #endif

@@ -46,7 +46,7 @@ t_ull	ft_rot(t_ull num, t_ull mask, int shift, t_bool left)
 		return (((num >> shift) | (num << (28 - shift))) & mask);
 }
 
-void	get_subkeys(t_ull *keys, t_ull key, t_bool encrypt)
+t_ull	*get_subkeys(t_ull *keys, t_ull key, t_bool encrypt)
 {
 	int		i;
 	t_ull	left;
@@ -63,6 +63,7 @@ void	get_subkeys(t_ull *keys, t_ull key, t_bool encrypt)
 		keys[encrypt ? i : 15 - i] = key_compress_permut((left << 28) | right);
 		i++;
 	}
+	return (keys);
 }
 
 /*
