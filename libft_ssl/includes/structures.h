@@ -27,6 +27,7 @@ typedef struct	s_options
 	int					fd_from;
 	char				*key;
 	t_bool				key_provided;
+	void				*subkeys;
 	unsigned long long	iv;
 	t_bool				iv_provided;
 	t_bool				base64;
@@ -40,6 +41,6 @@ typedef struct s_command
 }				t_command;
 
 typedef unsigned long long	t_block;
-typedef t_ull				(*t_mode)(t_ull block, void *keys);
+typedef t_ull				(*t_mode)(t_ull block, t_options *options);
 
 #endif

@@ -1,89 +1,71 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   des3_cbc.c                                         :+:      :+:    :+:   */
+/*   des3.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ptyshevs <ptyshevs@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/02/21 21:20:58 by ptyshevs          #+#    #+#             */
-/*   Updated: 2018/02/21 21:21:02 by ptyshevs         ###   ########.fr       */
+/*   Created: 2018/02/21 21:16:14 by ptyshevs          #+#    #+#             */
+/*   Updated: 2018/02/21 21:17:28 by ptyshevs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ssl.h"
+#include "permutations.h"
+#include "tools.h"
 
-void	des3_cbc_encrypt(t_line *in, t_line *out, t_ull *keys, t_ull iv)
+t_ull	des3_cbc_encrypt_block(t_ull block, t_options *options)
 {
-	long long	len;
-	int			i;
-	t_ull		block;
+	t_ull			**subkeys;
+	t_ull			res;
 
-	len = (long long)in->len;
-	out->len = (size_t)(len + (len % 8 == 0 ? 8 : 8 - (len % 8)));
-	out->str = ft_memalloc(out->len);
-	i = 0;
-	while ((len -= 8) >= 0)
-	{
-		block = str_to_block(in->str + i) ^ iv;
-		block = des_ecrypt_block(keys, block);
-		iv = block;
-		block_to_str(block, out, i, FALSE);
-		i += 8;
-	}
-	block = add_padding(in->str + i, 8 + len == 0 ? 8 : -len) ^ iv;
-	block_to_str(des_ecrypt_block(keys, block), out, i, FALSE);
+
+	subkeys = (t_ull **)options->subkeys;
+	res = des_encrypt_block(subkeys[0], block ^ options->iv);
+	res = des_encrypt_block(subkeys[1], res) ^ options->iv;
+	res = des_encrypt_block(subkeys[2], res ^ options->iv);
+	options->iv = block;
+	return (res);
 }
 
-void	des3_cbc_decrypt(t_line *in, t_line *out, t_ull *keys, t_ull iv)
+t_ull	des3_cbc_decrypt_block(t_ull block, t_options *options)
 {
-	long long	len;
-	t_ull		i;
-	t_ull		block;
-	t_ull		prev_block;
+	t_ull **subkeys;
 
-	len = (long long)in->len;
-	out->str = ft_memalloc(in->len);
-	i = 0;
-	while ((len -= 8) >= 0)
-	{
-		block = str_to_block(in->str + i);
-		prev_block = block;
-		block = des_ecrypt_block(keys, block) ^ iv;
-		iv = prev_block;
-		block_to_str(block, out, (int)i, FALSE);
-		i += 8;
-	}
-	out->len = i - out->str[i - 1];
+	subkeys = (t_ull **)options->subkeys;
+	block = des_encrypt_block(subkeys[2], block);
+	block = des_encrypt_block(subkeys[1], block);
+	block = des_encrypt_block(subkeys[0], block);
+	return (block);
 }
+
 /*
-** @brief      Data Encryption Standard cipher
+** @brief      DES (Data Encryption Standard) symmetric-key block cipher
 **
 ** @param      options  The options
 **
-** @return     1 if everything is OK, otherwise 0
+** @return     1 if everything okay, anything else otherwise
 */
 
 int		des3_cbc(t_options *options, t_line *in)
 {
-	t_ull	keys[3][16];
 	t_line	*out;
 	t_line	*tmp;
 
 	if (!in->str)
 		return (1);
 	out = init_line();
-	get_subkeys(keys[0], parse_hex(pad_key(options->key, 48)) , options->encrypt);
-	get_subkeys(keys[1], parse_hex(pad_key(options->key + 16, 48)) , (t_bool) !options->encrypt);
-	get_subkeys(keys[2], parse_hex(pad_key(options->key + 32, 48)) , options->encrypt);
+	des3_create_subkeys(options);
 	if (options->base64 && !options->encrypt)
 	{
 		base64_decrypt(in, (tmp = init_line()));
 		ft_tline_replace(in, tmp);
 		clean_t_line(&tmp);
 	}
-	options->encrypt ? des3_cbc_encrypt(in, out, keys[0], options->iv) :
-	des3_cbc_decrypt(in, out, keys[0], options->iv);
+	options->encrypt ? des_encrypt(in, out, options, des3_cbc_encrypt_block) :
+						des_decrypt(in, out, options, des3_cbc_decrypt_block);
 	out_des(options, out);
+	des3_clean_subkeys(&options->subkeys);
 	clean_t_line(&out);
 	return (1);
 }
