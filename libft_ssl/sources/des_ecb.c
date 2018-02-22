@@ -6,7 +6,7 @@
 /*   By: ptyshevs <ptyshevs@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/11 15:58:45 by ptyshevs          #+#    #+#             */
-/*   Updated: 2018/02/18 15:20:09 by ptyshevs         ###   ########.fr       */
+/*   Updated: 2018/02/22 21:26:36 by ptyshevs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,48 +14,55 @@
 #include "permutations.h"
 #include "tools.h"
 
-t_ull	des_encrypt_block(t_ull *keys, t_ull block)
-{
-	t_ull	left;
-	t_ull	left_prev;
-	t_ull	right;
-	t_ull	right_prev;
-	int		i;
+/*
+** @brief      Encrypt block using single DES in ECB mode
+**
+** @param      block    The 64-bit block
+** @param      options  The options
+**
+** @return     DES-ECB encrypted block
+*/
 
-	block = init_permut(block);
-	i = 0;
-	left = split_block(block, TRUE);
-	left_prev = left;
-	right = split_block(block, FALSE);
-	right_prev = right;
-	while (i < 16)
-	{
-		left = right;
-		right = left_prev ^ apply_key(right_prev, keys[i]);
-		left_prev = left;
-		right_prev = right;
-		i++;
-	}
-	block = final_permut((right << 32) | left);
-	return (block);
+t_ull	des_ecb_encrypt_block(t_ull block, t_options *options)
+{
+	return (des_encrypt_block((t_ull *)options->subkeys, block));
 }
 
-t_ull	add_padding(t_uc *remainder, long long value)
-{
-	t_ull	block;
-	int		i;
 
-	block = 0;
-	i = 8;
-	while (i > value)
-	{
-		block = (block << 8) | *remainder++;
-		i--;
-	}
-	i = 0;
-	while (i++ < value)
-		block = (block << 8) | value;
-	return (block);
+/*
+** @brief      Decrypt block using single DES in ECB mode
+**
+** @note       This function is identical to the encryption and differs only in
+**             the context. For decryption, the order of subkeys stored in
+**             <options->subkeys> is reversed.
+**
+** @param      block    The 64-bit block
+** @param      options  The options
+**
+** @return     DES-ECB decrypted block
+*/
+
+t_ull	des_ecb_decrypt_block(t_ull block, t_options *options)
+{
+	return (des_encrypt_block((t_ull *)options->subkeys, block));
+}
+
+void	des_create_subkeys(t_options *opt)
+{
+	t_ull	*sk;
+
+	sk = ft_memalloc(sizeof(t_ull) * 16);
+	opt->key = pad_key(opt->key, 16);
+	get_subkeys(sk, parse_hex(ft_strsub(opt->key, 0, 16)), opt->encrypt);
+	opt->subkeys = sk;
+	if (opt->print_key_iv)
+		display_key_iv(opt);
+	ft_strdel(&opt->key);
+}
+
+void	des_clean_subkeys(t_options *opt)
+{
+	ft_memdel(&opt->subkeys);
 }
 
 void	des_ecb_encrypt(t_line *in, t_line *out, t_ull *keys)

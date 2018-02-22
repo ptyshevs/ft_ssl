@@ -13,7 +13,7 @@
 #include "ft_ssl.h"
 #include "arg_tools.h"
 
-t_options	*init_options(void)
+t_options	*init_options(char	*command)
 {
 	t_options *opt;
 
@@ -27,6 +27,7 @@ t_options	*init_options(void)
 	opt->iv = 0;
 	opt->iv_provided = FALSE;
 	opt->print_key_iv = FALSE;
+	opt->command = command;
 	return (opt);
 }
 
@@ -77,7 +78,7 @@ t_options	*parse_options(t_args *args)
 	t_options	*opt;
 	int			i;
 
-	opt = parse_core_flags(args, init_options());
+	opt = parse_core_flags(args, init_options(args->command));
 	i = 0;
 	while (args->options && args->options[i])
 	{

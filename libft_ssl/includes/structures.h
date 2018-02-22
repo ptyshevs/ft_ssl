@@ -15,6 +15,8 @@
 
 # include "libft.h"
 
+typedef unsigned long long	t_block;
+
 typedef struct	s_args
 {
 	char		*command;
@@ -33,15 +35,19 @@ typedef struct	s_options
 	t_bool				print_key_iv;
 	t_bool				base64;
 	t_bool				encrypt;
+	char				*command;
 }				t_options;
 
-typedef struct s_command
+typedef t_ull				(*t_mode)(t_ull block, t_options *options);
+
+typedef struct	s_command
 {
 	char	*command_name;
-	int		(*f)(t_options *opt, t_line *in);
+	void	(*f)(t_options *opt, t_line *in, struct s_command);
+	t_mode	f_encrypt;
+	t_mode	f_decrypt;
+	void	(*create_subkeys)(t_options *options);
+	void	(*clean_subkeys)(t_options *options);
 }				t_command;
-
-typedef unsigned long long	t_block;
-typedef t_ull				(*t_mode)(t_ull block, t_options *options);
 
 #endif

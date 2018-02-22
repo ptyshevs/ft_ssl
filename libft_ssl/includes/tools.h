@@ -38,7 +38,7 @@ t_ull				ft_rot(t_ull num, t_ull mask, int shift, t_bool left);
 t_ull * get_subkeys(t_ull *keys, t_ull key, t_bool encrypt);
 t_ull				expand_block(t_ull block);
 
-int					get_index(char c);
+void				display_key_iv(t_options *options);
 void				out_base64(int fd, t_line *b64, t_bool x64);
 void				out_des(t_options *options, t_line *out);
 

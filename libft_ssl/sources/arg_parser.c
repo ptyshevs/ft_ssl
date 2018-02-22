@@ -42,9 +42,7 @@ void		dispatch_arguments(t_args *args)
 	while (g_implemented_commands[++i].command_name)
 		if (ft_strequ(g_implemented_commands[i].command_name, args->command))
 		{
-			if (!g_implemented_commands[i].f(opt, in))
-				ft_dprintf(2, "Smth went wrong with %s encryption function\n",
-					args->command);
+			g_implemented_commands[i].f(opt, in, g_implemented_commands[i]);
 			break ;
 		}
 	clean_t_line(&in);

@@ -67,7 +67,7 @@ int		des3_cbc(t_options *options, t_line *in)
 	options->encrypt ? des_encrypt(in, out, options, des3_cbc_encrypt_block) :
 						des_decrypt(in, out, options, des3_cbc_decrypt_block);
 	out_des(options, out);
-	des3_clean_subkeys(&options->subkeys);
+	des3_clean_subkeys(options);
 	clean_t_line(&out);
 	return (1);
 }

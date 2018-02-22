@@ -49,6 +49,14 @@ void	display_options_and_exit(char *option)
 	exit(1);
 }
 
+void	display_key_iv(t_options *options)
+{
+	ft_printf("key=%s\n", options->key);
+	if (ft_strequ(options->command, "des-cbc") ||
+		ft_strequ(options->command, "des3-cbc"))
+		ft_printf("iv =%llX\n", options->iv);
+}
+
 void	handle_file(int *fd, char *filename, t_bool from)
 {
 	if (from && filename == NULL)
