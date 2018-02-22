@@ -10,8 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "arg_parse.h"
-#include "ft_ssl.h"
+#include "arg_tools.h"
 
 t_bool		is_valid_command(t_args *args)
 {
@@ -24,51 +23,7 @@ t_bool		is_valid_command(t_args *args)
 	return (FALSE);
 }
 
-t_options	*init_options(void)
-{
-	t_options *opt;
-
-	opt = (t_options *)malloc(sizeof(t_options));
-	opt->fd_from = 0;
-	opt->fd_to = 1;
-	opt->base64 = FALSE;
-	opt->encrypt = TRUE;
-	opt->key = 0;
-	opt->key_provided = FALSE;
-	opt->iv = 0;
-	opt->iv_provided = FALSE;
-	return (opt);
-}
-
-t_options	*parse_options(t_args *args)
-{
-	t_options	*opt;
-
-	opt = init_options();
-	while (args->options && *args->options)
-	{
-		if (ft_strequ(*args->options, "-e") || ft_strequ(*args->options, "-d"))
-			opt->encrypt = ft_strequ(*args->options, "-e") ? TRUE : FALSE;
-		else if (ft_strequ(*args->options, "-a"))
-			opt->base64 = TRUE;
-		else if (ft_strequ(*args->options, "-i"))
-			handle_file(&opt->fd_from, *(args->options++ + 1), TRUE);
-		else if (ft_strequ(*args->options, "-o"))
-			handle_file(&opt->fd_to, *(args->options++ + 1), FALSE);
-		else if (ft_strequ(*args->options, "-k") && (opt->key_provided = TRUE))
-			*(args->options + 1) == NULL ? display_options_and_exit(NULL) :
-			(opt->key = valid_hex(*(args->options++ + 1), "key"));
-		else if (ft_strequ(*args->options, "-v") && (opt->iv_provided = TRUE))
-			*(args->options + 1) == NULL ? display_options_and_exit(NULL) :
-	(opt->iv = parse_hex(valid_hex(pad_key(*(args->options++ + 1), 16), "iv")));
-		else
-			display_options_and_exit(*args->options);
-		args->options++;
-	}
-	return (opt);
-}
-
-void		dispatch(t_args *args)
+void		dispatch_arguments(t_args *args)
 {
 	t_options	*opt;
 	int			i;

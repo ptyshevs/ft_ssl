@@ -10,8 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "arg_parse.h"
-#include "ft_ssl.h"
+#include "arg_tools.h"
 
 int		main(int ac, char **av)
 {
@@ -19,7 +18,7 @@ int		main(int ac, char **av)
 
 	args = arg_parse(ac, av);
 	if (is_valid_command(args))
-		dispatch(args);
+		dispatch_arguments(args);
 	else
 		return (display_usage(args));
 	return (0);

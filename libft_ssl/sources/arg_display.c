@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "arg_parse.h"
+#include "arg_tools.h"
 
 int		display_usage(t_args *args)
 {

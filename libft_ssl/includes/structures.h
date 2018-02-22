@@ -30,6 +30,7 @@ typedef struct	s_options
 	void				*subkeys;
 	unsigned long long	iv;
 	t_bool				iv_provided;
+	t_bool				print_key_iv;
 	t_bool				base64;
 	t_bool				encrypt;
 }				t_options;

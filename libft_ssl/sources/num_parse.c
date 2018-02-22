@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "arg_parse.h"
+#include "arg_tools.h"
 
 t_bool				is_valid_hex(char *nbr)
 {
@@ -26,14 +26,10 @@ t_bool				is_valid_hex(char *nbr)
 
 char				*valid_hex(char *nbr, char *type)
 {
-	if (ft_strequ(type, "key") && !is_valid_hex(nbr))
+	if (!is_valid_hex(nbr))
 	{
-		ft_dprintf(2, "non-hex digit\ninvalid hex key value\n");
-		exit(1);
-	}
-	else if (ft_strequ(type, "iv") && !is_valid_hex(nbr))
-	{
-		ft_dprintf(2, "non-hex digit\ninvalid hex iv value\n");
+		ft_dprintf(2, "non-hex digit\ninvalid hex %s value\n",
+					ft_strequ(type, "key") ? "key" : "iv");
 		exit(1);
 	}
 	else

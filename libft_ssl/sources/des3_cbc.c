@@ -24,19 +24,21 @@ t_ull	des3_cbc_encrypt_block(t_ull block, t_options *options)
 	res = des_encrypt_block(subkeys[0], block ^ options->iv);
 	res = des_encrypt_block(subkeys[1], res) ^ options->iv;
 	res = des_encrypt_block(subkeys[2], res ^ options->iv);
-	options->iv = block;
+	options->iv = res;
 	return (res);
 }
 
 t_ull	des3_cbc_decrypt_block(t_ull block, t_options *options)
 {
-	t_ull **subkeys;
+	t_ull	**subkeys;
+	t_ull	res;
 
 	subkeys = (t_ull **)options->subkeys;
-	block = des_encrypt_block(subkeys[2], block);
-	block = des_encrypt_block(subkeys[1], block);
-	block = des_encrypt_block(subkeys[0], block);
-	return (block);
+	res = des_encrypt_block(subkeys[2], block) ^ options->iv;
+	res = des_encrypt_block(subkeys[1], res ^ options->iv);
+	res = des_encrypt_block(subkeys[0], res) ^ options->iv;
+	options->iv = block;
+	return (res);
 }
 
 /*

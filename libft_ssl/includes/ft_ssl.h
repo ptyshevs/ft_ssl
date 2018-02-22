@@ -51,4 +51,12 @@ static t_command	g_implemented_commands[] = {
 	{"des3-cbc", &des3_cbc},
 	{NULL, NULL}};
 
+static	char	*g_options_provided[] = {
+		"-e", "-d",
+		"-i", "-o",
+		"-k", "-v",
+		"-a", "-p",
+		NULL
+};
+
 #endif
