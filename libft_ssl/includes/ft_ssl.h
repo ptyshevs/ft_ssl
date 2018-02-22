@@ -38,6 +38,8 @@ t_ull	des_encrypt_block(t_ull *keys, t_ull block);
 
 t_ull	des_ecb_encrypt_block(t_ull block, t_options *options);
 t_ull	des_ecb_decrypt_block(t_ull block, t_options *options);
+t_ull	des_cbc_encrypt_block(t_ull block, t_options *options);
+t_ull	des_cbc_decrypt_block(t_ull block, t_options *options);
 void	des_create_subkeys(t_options *opt);
 void	des_clean_subkeys(t_options *opt);
 
@@ -53,7 +55,8 @@ static t_command	g_implemented_commands[] = {
 			des_create_subkeys, des_clean_subkeys},
 	{"des-ecb", &des_map, des_ecb_encrypt_block, des_ecb_decrypt_block,
 			des_create_subkeys, des_clean_subkeys},
-	{"des-cbc", &des_map, NULL, NULL, NULL, NULL},
+	{"des-cbc", &des_map, des_cbc_encrypt_block, des_cbc_decrypt_block,
+			des_create_subkeys, des_clean_subkeys},
 	{"des3", &des_map, des3_ecb_encrypt_block, des3_ecb_decrypt_block,
 						des3_create_subkeys, des3_clean_subkeys},
 	{"des3-ecb", &des_map, des3_ecb_encrypt_block, des3_ecb_decrypt_block,
