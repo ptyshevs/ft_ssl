@@ -1,17 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   tools.c                                            :+:      :+:    :+:   */
+/*   in_out_tools.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ptyshevs <ptyshevs@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/12 09:03:42 by ptyshevs          #+#    #+#             */
-/*   Updated: 2018/02/18 12:53:24 by ptyshevs         ###   ########.fr       */
+/*   Updated: 2018/02/23 12:15:31 by ptyshevs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ssl.h"
-#include "tools.h"
+
+/*
+** @brief      Read content of the File Descriptor into t_line data structure.
+**
+** @param      fd               File Descriptor
+** @param      ignore_newlines  (t_bool) TRUE if I should ignore newlines, FALSE
+**                              otherwise
+**
+** @return     Read content in form of unsigned char string + len data structure
+*/
 
 t_line	*ft_read_fd_to_line(int fd, t_bool ignore_newlines)
 {
@@ -42,10 +51,13 @@ t_line	*ft_read_fd_to_line(int fd, t_bool ignore_newlines)
 }
 
 /*
-** @brief      Format base64 encrypt/decrypt string as it is in OpenSSL:
-**             newline every 64 characters + at the end of string
+** @brief      Format base64 encrypt/decrypt string as it is in OpenSSL: newline
+**             every 64 characters + at the end of string
+**
 ** @param      fd    file descriptior to write to
-** @param      b64   Base64 string
+** @param      b64   t_line, containing Base64-encoded string
+** @param      x64   If TRUE, function adds linebreak every 64 symbols.
+**                   If FALSE, output is written in one continuous string
 */
 
 void	out_base64(int fd, t_line *b64, t_bool x64)
@@ -56,7 +68,7 @@ void	out_base64(int fd, t_line *b64, t_bool x64)
 	shift = 0;
 	if (x64)
 	{
-		cnt_lbreaks = (long long) (b64->len / 64);
+		cnt_lbreaks = (long long)(b64->len / 64);
 		while (cnt_lbreaks--)
 		{
 			write(fd, b64->str + shift, 64);
@@ -69,6 +81,13 @@ void	out_base64(int fd, t_line *b64, t_bool x64)
 	else
 		write(fd, b64->str, b64->len);
 }
+
+/*
+** @brief      Output DES in appropriate format
+**
+** @param      options  The options
+** @param      out      The output t_line DS
+*/
 
 void	out_des(t_options *options, t_line *out)
 {

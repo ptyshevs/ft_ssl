@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "ft_ssl.h"
-#include "tools.h"
 
 /*
 ** @brief      Encrypt plaintext into base64
@@ -40,10 +39,10 @@ void	base64_encrypt(t_line *in, t_line *out)
 		octet |= j + 2 < in->len ? in->str[j + 2] : 0;
 		j += 3;
 		len -= 3;
-		out->str[i++] = g_it[(octet >> 18) & 0x3F];
-		out->str[i++] = g_it[(octet >> 12) & 0x3F];
-		out->str[i++] = len < -1 ? (char)'=' : g_it[(octet >> 6) & 0x3F];
-		out->str[i++] = len < 0 ? (char)'=' : g_it[octet & 0x3F];
+		out->str[i++] = (t_uc) g_b64[(octet >> 18) & 0x3F];
+		out->str[i++] = (t_uc) g_b64[(octet >> 12) & 0x3F];
+		out->str[i++] = (t_uc) (len < -1 ? '=' : g_b64[(octet >> 6) & 0x3F]);
+		out->str[i++] = (t_uc) (len < 0 ? '=' : g_b64[octet & 0x3F]);
 	}
 }
 

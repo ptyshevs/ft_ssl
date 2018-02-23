@@ -6,11 +6,19 @@
 /*   By: ptyshevs <ptyshevs@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/11 18:11:28 by ptyshevs          #+#    #+#             */
-/*   Updated: 2018/02/12 21:32:50 by ptyshevs         ###   ########.fr       */
+/*   Updated: 2018/02/23 11:10:00 by ptyshevs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "arg_tools.h"
+
+/*
+** @brief      Show usage in STDOUT
+**
+** @param      args  The arguments
+**
+** @return     1 (as return status back to main)
+*/
 
 int		display_usage(t_args *args)
 {
@@ -35,6 +43,12 @@ int		display_usage(t_args *args)
 	}
 }
 
+/*
+** @brief      Display options to the terminal and exit with error status 1
+**
+** @param      option  The option
+*/
+
 void	display_options_and_exit(char *option)
 {
 	if (option != NULL)
@@ -45,9 +59,16 @@ void	display_options_and_exit(char *option)
 				"-d\t\tdecrypt\n"
 				"-a\t\tbase64 encode/decode, depending on encryption flag\n"
 				"-k\t\tkey in hex is the next argument\n"
-				"-v\t\tiv in hex is the next argument\n");
+				"-v\t\tiv in hex is the next argument\n"
+				"-p\t\tprint key and iv (DES)\n");
 	exit(1);
 }
+
+/*
+** @brief      Display key and Initialization Vector, according to the -p flag.
+**
+** @param      options  The options
+*/
 
 void	display_key_iv(t_options *options)
 {
@@ -56,6 +77,16 @@ void	display_key_iv(t_options *options)
 		ft_strequ(options->command, "des3-cbc"))
 		ft_printf("iv =%llX\n", options->iv);
 }
+
+/*
+** @brief      Handle input/output file opening
+**
+** @param      fd        Pointer to the location where to store FD in case of
+**                       success.
+** @param      filename  The filename
+** @param      from      (t_bool) Is it file to read from (TRUE) or write to
+**                       (FALSE)?
+*/
 
 void	handle_file(int *fd, char *filename, t_bool from)
 {

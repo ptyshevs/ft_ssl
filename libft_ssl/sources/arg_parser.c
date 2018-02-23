@@ -1,16 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   arg_parse.c                                        :+:      :+:    :+:   */
+/*   arg_parser.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ptyshevs <ptyshevs@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/11 11:58:14 by ptyshevs          #+#    #+#             */
-/*   Updated: 2018/02/18 14:51:35 by ptyshevs         ###   ########.fr       */
+/*   Updated: 2018/02/23 11:15:25 by ptyshevs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "arg_tools.h"
+
+/*
+** @brief      Determines if the command entered is supported by the ft_ssl
+**             library.
+**
+** @param      args  The arguments structure
+**
+** @return     TRUE if command is valud, FALSE otherwise.
+*/
 
 t_bool		is_valid_command(t_args *args)
 {
@@ -22,6 +31,18 @@ t_bool		is_valid_command(t_args *args)
 			return (TRUE);
 	return (FALSE);
 }
+
+/*
+** @brief      Invoke the routine that implements the command provided.
+**
+** @note       Before actually calling the appropriate routine, few preliminary
+**             actions are carried out.
+**             1) Parsing of the options (and exit, in cale of any error)
+**             2) Input file reading to t_line structure
+**             3) Asking for key and/or IV for DES family of algorithms
+**
+** @param      args  The arguments structure
+*/
 
 void		dispatch_arguments(t_args *args)
 {
@@ -37,7 +58,7 @@ void		dispatch_arguments(t_args *args)
 		free(args);
 		return ;
 	}
-	ask_key_vector(args, opt);
+	ask_key_vector(opt);
 	i = -1;
 	while (g_implemented_commands[++i].command_name)
 		if (ft_strequ(g_implemented_commands[i].command_name, args->command))

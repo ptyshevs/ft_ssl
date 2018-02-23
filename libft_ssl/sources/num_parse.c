@@ -6,13 +6,21 @@
 /*   By: ptyshevs <ptyshevs@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/11 22:37:26 by ptyshevs          #+#    #+#             */
-/*   Updated: 2018/02/13 18:36:59 by ptyshevs         ###   ########.fr       */
+/*   Updated: 2018/02/23 15:53:19 by ptyshevs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "arg_tools.h"
 
-t_bool				is_valid_hex(char *nbr)
+/*
+** @brief      Determines if string contains valid number in hex format.
+**
+** @param      nbr   The number string
+**
+** @return     TRUE if format is valid, FALSE otherwise.
+*/
+
+t_bool	is_valid_hex(char *nbr)
 {
 	while (*nbr)
 	{
@@ -24,7 +32,19 @@ t_bool				is_valid_hex(char *nbr)
 	return (TRUE);
 }
 
-char				*valid_hex(char *nbr, char *type)
+/*
+** @brief      Pipe-like function to filter valid string containing hex number.
+**             If format provided is invalid, program exits with an appropriate
+**             message.
+**
+** @param      nbr   The number string
+** @param      type  The type of parameter ("key" or "iv", accordingly)
+**
+** @return     <nbr> string if format is valid, exit with status 1 in case of
+**             error encountered.
+*/
+
+char	*valid_hex(char *nbr, char *type)
 {
 	if (!is_valid_hex(nbr))
 	{
@@ -36,7 +56,15 @@ char				*valid_hex(char *nbr, char *type)
 		return (nbr);
 }
 
-unsigned long long	parse_hex(char *nbr)
+/*
+** @brief      Parse string containing hex number to t_ull variable.
+**
+** @param      nbr   The number string
+**
+** @return     unsigned long long int representation of the number provided.
+*/
+
+t_ull	parse_hex(char *nbr)
 {
 	unsigned long long	res;
 	char				*tmp;
@@ -60,12 +88,14 @@ unsigned long long	parse_hex(char *nbr)
 	return (res);
 }
 
-
 /*
-** @brief      if key is shorter than 64 bit, pad it with zeros. If it's longer,
-**             trim it.
+** @brief      if key is shorter than 64 bit, pad it with zeros on the left. If
+**             it's longer, trim it to the appropriate size.
 **
-** @param      key   The key
+** @param      key   The key string
+** @param      len   The desired length of the key
+**
+** @return     Padded key
 */
 
 char	*pad_key(char *key, size_t len)

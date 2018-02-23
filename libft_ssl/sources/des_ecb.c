@@ -6,7 +6,7 @@
 /*   By: ptyshevs <ptyshevs@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/11 15:58:45 by ptyshevs          #+#    #+#             */
-/*   Updated: 2018/02/22 21:26:36 by ptyshevs         ###   ########.fr       */
+/*   Updated: 2018/02/23 15:12:07 by ptyshevs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ t_ull	des_ecb_encrypt_block(t_ull block, t_options *options)
 	return (des_encrypt_block((t_ull *)options->subkeys, block));
 }
 
-
 /*
 ** @brief      Decrypt block using single DES in ECB mode
 **
@@ -45,6 +44,15 @@ t_ull	des_ecb_decrypt_block(t_ull block, t_options *options)
 	return (des_encrypt_block((t_ull *)options->subkeys, block));
 }
 
+/*
+** @brief      Create array of 16 subkeys from padded 16-bytes key,
+**             and put it into opt->subkeys field. If -p flag specified, display
+**             key and/or IV to the terminal.
+**             Release memory allocated for opt->key during padding.
+**
+** @param      opt   The options
+*/
+
 void	des_create_subkeys(t_options *opt)
 {
 	t_ull	*sk;
@@ -57,6 +65,12 @@ void	des_create_subkeys(t_options *opt)
 		display_key_iv(opt);
 	ft_strdel(&opt->key);
 }
+
+/*
+** @brief      Release resources allocated for storing 16 subkeys.
+**
+** @param      opt   The option
+*/
 
 void	des_clean_subkeys(t_options *opt)
 {

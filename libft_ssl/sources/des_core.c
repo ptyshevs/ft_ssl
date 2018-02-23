@@ -6,12 +6,29 @@
 /*   By: ptyshevs <ptyshevs@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/22 17:18:12 by ptyshevs          #+#    #+#             */
-/*   Updated: 2018/02/22 17:18:25 by ptyshevs         ###   ########.fr       */
+/*   Updated: 2018/02/23 15:08:00 by ptyshevs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "permutations.h"
 #include "ft_ssl.h"
+
+/*
+** @brief      Generic block encryption routine: given 16 subkeys, encode
+**             64-bit block of data.
+**
+** @note       Algorithm steps:
+**             1) apply Initial Permutation
+**             2) split block in 32-bit Left and Right parts
+**             3) For 16 iterations, we now:
+**                a) record Right into Left variable
+**                b) Right = Left XOR apply_key(right_prev, current_subkey)
+**
+** @param      keys   The subkeys array
+** @param      block  The block
+**
+** @return     Encrypted block
+*/
 
 t_ull	des_encrypt_block(t_ull *keys, t_ull block)
 {
@@ -39,6 +56,15 @@ t_ull	des_encrypt_block(t_ull *keys, t_ull block)
 	return (block);
 }
 
+/*
+** @brief      Adds a padding to the last block
+**
+** @param      remainder  The remainder string
+** @param      value      The value to pad with
+**
+** @return     The last padded string
+*/
+
 t_ull	add_padding(t_uc *remainder, long long value)
 {
 	t_ull	block;
@@ -46,16 +72,21 @@ t_ull	add_padding(t_uc *remainder, long long value)
 
 	block = 0;
 	i = 8;
-	while (i > value)
-	{
+	while (i-- > value)
 		block = (block << 8) | *remainder++;
-		i--;
-	}
-	i = 0;
-	while (i++ < value)
+	while (i-- > 0)
 		block = (block << 8) | value;
 	return (block);
 }
+
+/*
+** @brief      Generic encryption routine
+**
+** @param      in       Input string
+** @param      out      The output string
+** @param      options  The options
+** @param      mode     The mode of operation, routine to encrypt one block
+*/
 
 void	des_encrypt(t_line *in, t_line *out, t_options *options, t_mode mode)
 {
@@ -78,6 +109,15 @@ void	des_encrypt(t_line *in, t_line *out, t_options *options, t_mode mode)
 	block_to_str(mode(block, options), out, i, FALSE);
 }
 
+/*
+** @brief      Generic decryption routine
+**
+** @param      in       Input string
+** @param      out      The output string
+** @param      options  The options
+** @param      mode     The mode of operation, routine to decrypt one block
+*/
+
 void	des_decrypt(t_line *in, t_line *out, t_options *options, t_mode mode)
 {
 	long long	len;
@@ -96,6 +136,23 @@ void	des_decrypt(t_line *in, t_line *out, t_options *options, t_mode mode)
 	}
 	out->len = i - out->str[i - 1];
 }
+
+/*
+** @brief      Use one of the commands fields to perform the specific DES algo
+**
+** @note       Command structure must have the following interface:
+**
+**             * command.create_subkeys(t_options *options) - fill in the
+**             opt->subkeys field
+**             * command.f_encrypt - routine to encrypt one block
+**             * command.f_decrypt - routine to decrypt one block
+**             * command.clean_subkeys - routine to free the resources allocated
+**                 when creating subkeys array
+**
+** @param      opt      The option
+** @param      in       Input string
+** @param      command  The command structure
+*/
 
 void	des_map(t_options *opt, t_line *in, t_command command)
 {

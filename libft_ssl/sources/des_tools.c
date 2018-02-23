@@ -1,17 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   block_tools.c                                      :+:      :+:    :+:   */
+/*   des_tools.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ptyshevs <ptyshevs@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/21 12:09:03 by ptyshevs          #+#    #+#             */
-/*   Updated: 2018/02/21 12:10:04 by ptyshevs         ###   ########.fr       */
+/*   Updated: 2018/02/23 15:28:37 by ptyshevs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <permutations.h>
 #include "ft_ssl.h"
+
+/*
+** @brief      Write block to t_line <out> string. If it's the last block, add
+**             PKCS padding.
+**
+** @note       Block is splitted into 8 bytes, each represents one unsigned
+**             char to append to <out> string.
+**
+** @param      block       The 64-bit block
+** @param      out         The out t_line
+** @param      j           iterator value that points to the end of out->str
+** @param      last_block  TRUE if it is the last block, otherwise FALSE
+*/
 
 void	block_to_str(t_ull block, t_line *out, int j, t_bool last_block)
 {
@@ -28,7 +41,9 @@ void	block_to_str(t_ull block, t_line *out, int j, t_bool last_block)
 }
 
 /*
-** @brief      Rotate bits in number, trimming it using mask
+** @brief      Rotate bits in a number, preventing overflow using mask.
+**
+** @note       Using in subkeys generation
 **
 ** @param      num    The number
 ** @param      mask   The mask
@@ -45,6 +60,26 @@ t_ull	ft_rot(t_ull num, t_ull mask, int shift, t_bool left)
 	else
 		return (((num >> shift) | (num << (28 - shift))) & mask);
 }
+
+/*
+** @brief      Generate 16 48-bit subkeys.
+**
+** @note       Algorithm steps:
+**             1) Permut Key according to PC-1 table.
+**             2) Split key into two 28-bit halves.
+**             3) For 16 rounds, shift separatedly left and right half accroding
+**                to the number of left shifts in g_key_shift table
+**             4) Concatenate each pair back, and apply compressing permutation,
+**                according to the PC-2 table
+**
+** @param      keys     The pointer to array in which the subkeys should be
+**                          written.
+** @param      key      The original 64-bit key
+** @param      encrypt  TRUE, if subkeys are for encryption. If FALSE, the order
+**                      of subkeys is reversed.
+**
+** @return     Pointer to <keys>
+*/
 
 t_ull	*get_subkeys(t_ull *keys, t_ull key, t_bool encrypt)
 {
@@ -98,7 +133,7 @@ t_ull	expand_block(t_ull block)
 **             1) Expansion: the 32-bit block is expanded to 48 bits
 **             by duplicating half of the bits
 **
-**             2) Key mixing: output is XORed with a subkey
+**             2) Key mixing: output is XORed with a provided subkey
 **
 **             3) Substitution: block is divided into eight 6-bit pieces, for
 **             each the corresponding 4-bit substitution table is applied. The

@@ -19,7 +19,6 @@
 # include "ft_ssl.h"
 # include <fcntl.h>
 # include <string.h>
-# include <stdio.h>  // Don't forget to remove
 
 t_args		*arg_parse(int ac, char **av);
 t_bool		is_valid_command(t_args *args);
