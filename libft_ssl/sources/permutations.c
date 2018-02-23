@@ -6,7 +6,7 @@
 /*   By: ptyshevs <ptyshevs@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/20 13:37:46 by ptyshevs          #+#    #+#             */
-/*   Updated: 2018/02/21 12:05:15 by ptyshevs         ###   ########.fr       */
+/*   Updated: 2018/02/23 16:54:15 by ptyshevs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,14 @@
 #include "permutations.h"
 
 /*
-** @brief      Initial permutation
+** @brief      Initial permutation of 64-bit block
 **
 ** @param      block  The block
 **
 ** @return     permuted block
 */
 
-t_ull		init_permut(t_ull block)
+t_ull	init_permut(t_ull block)
 {
 	t_ull	res;
 	int		i;
@@ -71,24 +71,25 @@ t_ull	key_permut(t_ull key)
 
 t_ull	key_compress_permut(t_ull key)
 {
-    t_ull	res;
-    int		i;
-    int		shift;
+	t_ull	res;
+	int		i;
+	int		shift;
 
-    res = 0;
-    i = 0;
-    while (i < 48)
-    {
-        shift = 56 - g_compress_permut[i++];
-        res = (res << 1) | ((key & (1UL << shift)) >> shift);
-    }
-    return (res);
+	res = 0;
+	i = 0;
+	while (i < 48)
+	{
+		shift = 56 - g_compress_permut[i++];
+		res = (res << 1) | ((key & (1UL << shift)) >> shift);
+	}
+	return (res);
 }
 
 /*
-** @brief      Permute 32-bit 
+** @brief      Permute the bits of 32-bit block according to the <pbox_permut>
+**             table, after the application of S-box permutation
 **
-** @param      block  The block
+** @param      block  The 32-bit block
 **
 ** @return     P-box permuted block
 */
@@ -112,24 +113,23 @@ t_ull	pbox_permut(t_ull block)
 /*
 ** @brief      Final permutation of RL block
 **
-** @param      block  The block
+** @param      block  The 64-bit block
 **
-** @return     { description_of_the_return_value }
+** @return     Block permuted according to <g_final_permut> table.
 */
 
 t_ull	final_permut(t_ull block)
 {
-    t_ull	res;
-    int		i;
-    int		shift;
+	t_ull	res;
+	int		i;
+	int		shift;
 
-    res = 0;
-    i = 0;
-    while (i < 64)
-    {
-        shift = 64 - g_final_permut[i++];
-        res = (res << 1) | ((block & (1UL << shift)) >> shift);
-    }
-    return (res);
+	res = 0;
+	i = 0;
+	while (i < 64)
+	{
+		shift = 64 - g_final_permut[i++];
+		res = (res << 1) | ((block & (1UL << shift)) >> shift);
+	}
+	return (res);
 }
-

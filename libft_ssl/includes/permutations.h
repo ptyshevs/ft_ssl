@@ -13,7 +13,7 @@
 #ifndef PERMUTATIONS_H
 # define PERMUTATIONS_H
 
-#include "libft.h"
+# include "libft.h"
 
 static unsigned char	g_init_permut[64] =
 {

@@ -30,7 +30,6 @@ t_ull	des_cbc_encrypt_block(t_ull block, t_options *options)
 	return (res);
 }
 
-
 /*
 ** @brief      Decrypt block using single DES in CBC mode
 **

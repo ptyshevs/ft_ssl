@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef ARG_PARSE_H
-# define ARG_PARSE_H
+#ifndef ARG_TOOLS_H
+# define ARG_TOOLS_H
 
 # include "libft.h"
 # include "structures.h"
@@ -19,6 +19,7 @@
 # include "ft_ssl.h"
 # include <fcntl.h>
 # include <string.h>
+# include <stdio.h>
 
 t_args		*arg_parse(int ac, char **av);
 t_bool		is_valid_command(t_args *args);

@@ -60,7 +60,7 @@ t_ull	des3_ecb_decrypt_block(t_ull block, t_options *options)
 
 /*
 ** @brief      Create 3 arrays of size 16 from the 196-bit key
-** 
+**
 **             Key is padded from the left side with zeroes, and then splitted
 **             in three 16-bytes keys. From each key, 16 subkeys are generated,
 **             either in direct or reversed order (whether encrypt or decrypt).
@@ -79,7 +79,6 @@ void	des3_create_subkeys(t_options *opt)
 	sk[1] = (t_ull *)ft_memalloc(sizeof(t_ull) * 16);
 	sk[2] = (t_ull *)ft_memalloc(sizeof(t_ull) * 16);
 	opt->key = pad_key(opt->key, 48);
-
 	get_subkeys(sk[0], parse_hex(ft_strsub(opt->key, 0, 16)), opt->encrypt);
 	get_subkeys(sk[1], parse_hex(ft_strsub(opt->key, 16, 16)), !opt->encrypt);
 	get_subkeys(sk[2], parse_hex(ft_strsub(opt->key, 32, 16)), opt->encrypt);
@@ -100,8 +99,8 @@ void	des3_clean_subkeys(t_options *opt)
 	t_ull	**sk;
 
 	sk = (t_ull **)opt->subkeys;
-	ft_memdel((void **) &(sk[0]));
-	ft_memdel((void **) &(sk[1]));
-	ft_memdel((void **) &(sk[2]));
-	ft_memdel((void **) &(sk));
+	ft_memdel((void **)&(sk[0]));
+	ft_memdel((void **)&(sk[1]));
+	ft_memdel((void **)&(sk[2]));
+	ft_memdel((void **)&(sk));
 }

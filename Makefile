@@ -94,7 +94,6 @@ $(ODIR)/%.o: $(LIBSSL_SRCDIR)/%.c $(LIBSSL_HEADERS)
 $(ODIR)/$(LIBFT_DIR)/%.o: $(LIBFT_SRCDIR)/%.c $(LIBFT_HEADERS)
 	@gcc $(FLAGS) -o $@ -c $< -I$(LIBFT_INCDIR)
 
-
 $(ODIR):
 	@mkdir -p $(ODIR)
 	@mkdir -p $(ODIR)/$(LIBFT_DIR)

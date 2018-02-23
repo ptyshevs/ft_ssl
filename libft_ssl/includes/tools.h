@@ -13,12 +13,12 @@
 #ifndef TOOLS_H
 # define TOOLS_H
 
+# include <stdio.h>
+
 /*
 ** index table for Base64 encoding
 */
 
-static t_uc	*g_it = \
-	(t_uc *)"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 static char	*g_b64 = \
 "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
