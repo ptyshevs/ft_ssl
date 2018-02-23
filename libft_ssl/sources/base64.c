@@ -39,10 +39,10 @@ void	base64_encrypt(t_line *in, t_line *out)
 		octet |= j + 2 < in->len ? in->str[j + 2] : 0;
 		j += 3;
 		len -= 3;
-		out->str[i++] = (t_uc)g_b64[(octet >> 18) & 0x3F];
-		out->str[i++] = (t_uc)g_b64[(octet >> 12) & 0x3F];
-		out->str[i++] = (t_uc)(len < -1 ? '=' : g_b64[(octet >> 6) & 0x3F]);
-		out->str[i++] = (t_uc)(len < 0 ? '=' : g_b64[octet & 0x3F]);
+		out->str[i++] = (t_uc) g_b64[(octet >> 18) & 0x3F];
+		out->str[i++] = (t_uc) g_b64[(octet >> 12) & 0x3F];
+		out->str[i++] = (t_uc) (len < -1 ? '=' : g_b64[(octet >> 6) & 0x3F]);
+		out->str[i++] = (t_uc) (len < 0 ? '=' : g_b64[octet & 0x3F]);
 	}
 }
 
@@ -77,8 +77,10 @@ void	base64_decrypt(t_line *in, t_line *out)
 		}
 		j = 2;
 		while (j-- >= 0)
-			if (k < 5 || ft_strchr(g_b64, in->str[k - (j + 3)]))
-				out->str[out->len++] = (t_uc)(octet >> (8 * (j + 1)) & 255);
+		{
+			if (k < 5 || ft_strchr(g_b64, in->str[k - (j + 2)]))
+				out->str[out->len++] = (t_uc) (octet >> (8 * (j + 1)) & 255);
+		}
 	}
 }
 

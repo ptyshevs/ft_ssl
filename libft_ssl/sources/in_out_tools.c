@@ -72,7 +72,7 @@ void	out_base64(int fd, t_line *b64, t_bool x64)
 		while (cnt_lbreaks--)
 		{
 			write(fd, b64->str + shift, 64);
-			write(fd, "\n", cnt_lbreaks > 0 ? 1 : 0);
+			write(fd, "\n", 1);
 			shift += 64;
 		}
 		write(fd, b64->str + shift, &b64->str[b64->len] - (b64->str + shift));
