@@ -79,25 +79,24 @@ t_options	*parse_core_flags(t_args *args, t_options *opt)
 	int		i;
 
 	i = 0;
-	while (args->options && args->options[i])
+	while (args->op && args->op[i])
 	{
-		if (ft_strequ(args->options[i], "-e"))
+		if (ft_strequ(args->op[i], "-e"))
 			opt->encrypt = TRUE;
-		else if (ft_strequ(args->options[i], "-d"))
+		else if (ft_strequ(args->op[i], "-d"))
 			opt->encrypt = FALSE;
-		else if (ft_strequ(args->options[i], "-i"))
-			handle_file(&opt->fd_from, args->options[i++ + 1], TRUE);
-		else if (ft_strequ(args->options[i], "-o"))
-			handle_file(&opt->fd_to, args->options[i++ + 1], FALSE);
-		else if (ft_strequ(args->options[i], "-k") && (opt->key_provided = TRUE))
-			args->options[i + 1] == NULL ? display_options_and_exit(NULL) :
-			(opt->key = valid_hex(args->options[i++ + 1], "key"));
-		else if (ft_strequ(args->options[i], "-v") && (opt->iv_provided = TRUE))
-			args->options[i + 1] == NULL ? display_options_and_exit(NULL) :
-			(opt->iv = parse_hex(valid_hex(pad_key(args->options[i++ + 1], 16),
-										"iv")));
-		else if (!ft_strequ(args->options[i], "-a") && !ft_strequ(args->options[i], "-p"))
-			display_options_and_exit(args->options[i]);
+		else if (ft_strequ(args->op[i], "-i"))
+			handle_file(&opt->fd_from, args->op[i++ + 1], TRUE);
+		else if (ft_strequ(args->op[i], "-o"))
+			handle_file(&opt->fd_to, args->op[i++ + 1], FALSE);
+		else if (ft_strequ(args->op[i], "-k") && (opt->key_provided = TRUE))
+			args->op[i + 1] == NULL ? display_options_and_exit(NULL) :
+			(opt->key = valid_hex(args->op[i++ + 1], "key"));
+		else if (ft_strequ(args->op[i], "-v") && (opt->iv_provided = TRUE))
+			args->op[i + 1] == NULL ? display_options_and_exit(NULL) :
+	(opt->iv = parse_hex(valid_hex(pad_key(args->op[i++ + 1], 16), "iv")));
+		else if (!ft_strequ(args->op[i], "-a") && !ft_strequ(args->op[i], "-p"))
+			display_options_and_exit(args->op[i]);
 		i++;
 	}
 	return (opt);
@@ -130,12 +129,11 @@ t_options	*parse_options(t_args *args)
 
 	opt = parse_core_flags(args, init_options(args->command));
 	i = 0;
-	while (args->options && args->options[i])
+	while (args->op && args->op[i])
 	{
-		if (ft_strequ(args->options[i], "-a"))
+		if (ft_strequ(args->op[i], "-a"))
 			opt->base64 = TRUE;
-
-		else if (ft_strequ(args->options[i], "-p"))
+		else if (ft_strequ(args->op[i], "-p"))
 			opt->print_key_iv = TRUE;
 		i++;
 	}

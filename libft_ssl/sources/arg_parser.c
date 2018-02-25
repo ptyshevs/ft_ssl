@@ -88,7 +88,7 @@ t_args		*arg_parse(int ac, char **av)
 
 	args = malloc(sizeof(t_args));
 	args->command = NULL;
-	args->options = ac > 2 ? (char **)malloc(sizeof(char *) * (ac - 1)) : NULL;
+	args->op = ac > 2 ? (char **)malloc(sizeof(char *) * (ac - 1)) : NULL;
 	if (ac < 2)
 		return (args);
 	args->command = av[1];
@@ -97,10 +97,10 @@ t_args		*arg_parse(int ac, char **av)
 		i = 2;
 		while (i < ac)
 		{
-			args->options[i - 2] = av[i];
+			args->op[i - 2] = av[i];
 			i++;
 		}
-		args->options[i - 2] = NULL;
+		args->op[i - 2] = NULL;
 	}
 	return (args);
 }

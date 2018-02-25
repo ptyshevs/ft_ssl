@@ -20,7 +20,7 @@ typedef unsigned long long	t_block;
 typedef struct	s_args
 {
 	char		*command;
-	char		**options;
+	char		**op;
 }				t_args;
 
 typedef struct	s_options

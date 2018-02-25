@@ -19,7 +19,8 @@
 ** index table for Base64 encoding
 */
 
-static char	*g_b64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+static char	*g_b64 = \
+"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
 t_line				*ft_read_fd_to_line(int fd, t_bool ignore_newlines);
 void				ask_key_vector(t_options *options);
