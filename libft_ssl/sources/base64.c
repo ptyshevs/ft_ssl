@@ -77,7 +77,7 @@ void	base64_decrypt(t_line *in, t_line *out)
 		}
 		j = 2;
 		while (j-- >= 0)
-			if (k < 5 || ft_strchr(g_b64, in->str[k - (j + 2)]))
+			if (ft_strchr(g_b64, in->str[k - (j + 2)]))
 				out->str[out->len++] = (t_uc)(octet >> (8 * (j + 1)) & 255);
 	}
 }
