@@ -63,7 +63,7 @@ t_line	*ft_read_fd_to_line(int fd, t_bool ignore_newlines)
 void	out_base64(int fd, t_line *b64, t_bool x64)
 {
 	long long	cnt_lbreaks;
-	int			shift;
+	size_t		shift;
 
 	shift = 0;
 	if (x64)
@@ -76,7 +76,8 @@ void	out_base64(int fd, t_line *b64, t_bool x64)
 			shift += 64;
 		}
 		write(fd, b64->str + shift, &b64->str[b64->len] - (b64->str + shift));
-		write(fd, "\n", 1);
+		if (shift < b64->len)
+			write(fd, "\n", 1);
 	}
 	else
 		write(fd, b64->str, b64->len);

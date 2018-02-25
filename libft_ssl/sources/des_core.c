@@ -74,7 +74,7 @@ t_ull	add_padding(t_uc *remainder, long long value)
 	i = 8;
 	while (i-- > value)
 		block = (block << 8) | *remainder++;
-	while (i-- > 0)
+	while (i-- >= 0)
 		block = (block << 8) | value;
 	return (block);
 }
