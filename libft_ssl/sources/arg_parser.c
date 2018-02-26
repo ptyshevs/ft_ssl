@@ -6,11 +6,19 @@
 /*   By: ptyshevs <ptyshevs@student.unit.ua>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/11 11:58:14 by ptyshevs          #+#    #+#             */
-/*   Updated: 2018/02/23 11:15:25 by ptyshevs         ###   ########.fr       */
+/*   Updated: 2018/02/26 17:59:56 by ptyshevs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "arg_tools.h"
+
+void		cleanup(t_line *in, t_options *opt, t_args *args)
+{
+	clean_t_line(&in);
+	ft_memdel((void **)&opt);
+	ft_memdel((void **)&args->op);
+	ft_memdel((void **)&args);
+}
 
 /*
 ** @brief      Determines if the command entered is supported by the ft_ssl
@@ -54,9 +62,7 @@ void		dispatch_arguments(t_args *args)
 	if (!(in = ft_read_fd_to_line(opt->fd_from, (t_bool)(!opt->encrypt &&
 		(opt->base64 || ft_strequ(opt->command, "base64")))))->str)
 	{
-		clean_t_line(&in);
-		free(opt);
-		free(args);
+		cleanup(in, opt, args);
 		return ;
 	}
 	ask_key_vector(opt);
@@ -67,9 +73,7 @@ void		dispatch_arguments(t_args *args)
 			g_implemented_commands[i].f(opt, in, g_implemented_commands[i]);
 			break ;
 		}
-	clean_t_line(&in);
-	free(opt);
-	free(args);
+	cleanup(in, opt, args);
 }
 
 /*
