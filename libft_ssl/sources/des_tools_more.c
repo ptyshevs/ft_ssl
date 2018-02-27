@@ -88,7 +88,8 @@ void	read_key(t_options *options)
 	char	*key;
 
 	ft_dprintf(2, "enter des key in hex: ");
-	freopen("/dev/tty", "r", stdin);
+	if (options->fd_from == 0)
+		freopen("/dev/tty", "r", stdin);
 	ft_gnl(0, &key);
 	if (key == NULL)
 	{
@@ -116,7 +117,8 @@ void	read_iv(t_options *options)
 	char	*iv;
 
 	ft_dprintf(2, "enter initial vector: ");
-	freopen("/dev/tty", "r", stdin);
+	if (options->fd_from == 0)
+		freopen("/dev/tty", "r", stdin);
 	ft_gnl(0, &iv);
 	if (iv == NULL)
 	{
