@@ -13,9 +13,10 @@
 #ifndef STRUCTURES_H
 # define STRUCTURES_H
 
+#include <ft_gnls.h>
 # include "libft.h"
 
-typedef unsigned long long	t_block;
+typedef unsigned long long	t_block; // for what?
 
 typedef struct	s_args
 {

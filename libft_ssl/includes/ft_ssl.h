@@ -40,7 +40,7 @@ t_ull	des3_cbc_decrypt_block(t_ull block, t_options *options);
 void	des3_create_subkeys(t_options *opt);
 void	des3_clean_subkeys(t_options *options);
 
-static t_command	g_implemented_commands[] = {
+static t_command	g_commands[] = {
 	{"base64", &base64, NULL, NULL, NULL, NULL},
 	{"des", &des_map, des_ecb_encrypt_block, des_ecb_decrypt_block,
 		des_create_subkeys, des_clean_subkeys},

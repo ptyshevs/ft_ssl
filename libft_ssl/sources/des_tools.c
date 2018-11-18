@@ -23,7 +23,7 @@
 ** @param      block       The 64-bit block
 ** @param      out         The out t_line
 ** @param      j           iterator value that points to the end of out->str
-** @param      last_block  TRUE if it is the last block, otherwise FALSE
+** @param      last_block  True if it is the last block, otherwise False
 */
 
 void	block_to_str(t_ull block, t_line *out, int j, t_bool last_block)
@@ -75,7 +75,7 @@ t_ull	ft_rot(t_ull num, t_ull mask, int shift, t_bool left)
 ** @param      keys     The pointer to array in which the subkeys should be
 **                          written.
 ** @param      key      The original 64-bit key
-** @param      encrypt  TRUE, if subkeys are for encryption. If FALSE, the order
+** @param      encrypt  True, if subkeys are for encryption. If False, the order
 **                      of subkeys is reversed.
 **
 ** @return     Pointer to <keys>
@@ -93,8 +93,8 @@ t_ull	*get_subkeys(t_ull *keys, t_ull key, t_bool encrypt)
 	i = 0;
 	while (i < 16)
 	{
-		left = ft_rot(left, 0xFFFFFFF, g_key_shift[i], TRUE);
-		right = ft_rot(right, 0xFFFFFFF, g_key_shift[i], TRUE);
+		left = ft_rot(left, 0xFFFFFFF, g_key_shift[i], True);
+		right = ft_rot(right, 0xFFFFFFF, g_key_shift[i], True);
 		keys[encrypt ? i : 15 - i] = key_compress_permut((left << 28) | right);
 		i++;
 	}

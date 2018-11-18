@@ -10,6 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <ft_printf.h>
+#include <ft_str.h>
 #include "arg_tools.h"
 
 /*
@@ -37,8 +39,8 @@ int		display_usage(t_args *args)
 		ft_printf("\nMessage Digest commands:\n");
 		ft_printf("\nCipher commands:\n");
 		i = 0;
-		while (g_implemented_commands[i].command_name)
-			ft_printf("%s\n", g_implemented_commands[i++].command_name);
+		while (g_commands[i].command_name)
+			ft_printf("%s\n", g_commands[i++].command_name);
 		return (1);
 	}
 }

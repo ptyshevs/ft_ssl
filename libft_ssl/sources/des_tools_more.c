@@ -10,6 +10,10 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <ft_printf.h>
+#include <stdio.h>
+#include <ft_str.h>
+#include <ft_tell.h>
 #include "ft_ssl.h"
 
 /*
@@ -63,7 +67,7 @@ void	ask_key_vector(t_options *options)
 	if (ft_endswith(options->command, "cbc") &&
 		options->key_provided && !options->iv_provided)
 	{
-		ft_message_and_exit("iv undefined", 2, 1);
+		ft_panic(1, "iv undefined");
 	}
 	if (!ft_strequ(options->command, "base64"))
 	{

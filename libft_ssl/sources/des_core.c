@@ -40,9 +40,9 @@ t_ull	des_encrypt_block(t_ull *keys, t_ull block)
 
 	block = init_permut(block);
 	i = 0;
-	left = split_block(block, TRUE);
+	left = split_block(block, True);
 	left_prev = left;
-	right = split_block(block, FALSE);
+	right = split_block(block, False);
 	right_prev = right;
 	while (i < 16)
 	{
@@ -102,11 +102,11 @@ void	des_encrypt(t_line *in, t_line *out, t_options *options, t_mode mode)
 	{
 		block = str_to_block(in->str + i);
 		block = mode(block, options);
-		block_to_str(block, out, i, FALSE);
+		block_to_str(block, out, i, False);
 		i += 8;
 	}
 	block = add_padding(in->str + i, 8 + len == 0 ? 8 : -len);
-	block_to_str(mode(block, options), out, i, FALSE);
+	block_to_str(mode(block, options), out, i, False);
 }
 
 /*
@@ -131,7 +131,7 @@ void	des_decrypt(t_line *in, t_line *out, t_options *options, t_mode mode)
 	{
 		block = str_to_block(in->str + i);
 		block = mode(block, options);
-		block_to_str(block, out, (int)i, FALSE);
+		block_to_str(block, out, (int)i, False);
 		i += 8;
 	}
 	out->len = i - out->str[i - 1];

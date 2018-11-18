@@ -16,7 +16,7 @@
 ** @brief      Read content of the File Descriptor into t_line data structure.
 **
 ** @param      fd               File Descriptor
-** @param      ignore_newlines  (t_bool) TRUE if I should ignore newlines, FALSE
+** @param      ignore_newlines  (t_bool) True if I should ignore newlines, False
 **                              otherwise
 **
 ** @return     Read content in form of unsigned char string + len data structure
@@ -38,7 +38,7 @@ t_line	*ft_read_fd_to_line(int fd, t_bool ignore_newlines)
 		while (content->len + r >= size)
 		{
 			content->str = ft_realloc(content->str, content->len,
-									size * 2, TRUE);
+									size * 2, True);
 			size *= 2;
 		}
 		while (ignore_newlines && i < r)
@@ -56,8 +56,8 @@ t_line	*ft_read_fd_to_line(int fd, t_bool ignore_newlines)
 **
 ** @param      fd    file descriptior to write to
 ** @param      b64   t_line, containing Base64-encoded string
-** @param      x64   If TRUE, function adds linebreak every 64 symbols.
-**                   If FALSE, output is written in one continuous string
+** @param      x64   If True, function adds linebreak every 64 symbols.
+**                   If False, output is written in one continuous string
 */
 
 void	out_base64(int fd, t_line *b64, t_bool x64)

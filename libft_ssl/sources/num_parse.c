@@ -10,6 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <ft_printf.h>
+#include <ft_str.h>
 #include "arg_tools.h"
 
 /*
@@ -17,7 +19,7 @@
 **
 ** @param      nbr   The number string
 **
-** @return     TRUE if format is valid, FALSE otherwise.
+** @return     True if format is valid, False otherwise.
 */
 
 t_bool	is_valid_hex(char *nbr)
@@ -26,10 +28,10 @@ t_bool	is_valid_hex(char *nbr)
 	{
 		if (!((*nbr >= 48 && *nbr <= 57) || (*nbr >= 65 && *nbr <= 70) ||
 			(*nbr >= 97 && *nbr <= 102)))
-			return (FALSE);
+			return (False);
 		nbr++;
 	}
-	return (TRUE);
+	return (True);
 }
 
 /*
@@ -107,7 +109,7 @@ char	*pad_key(char *key, size_t len)
 	{
 		tmp = ft_strnew(48);
 		ft_memset(tmp, '0', len - ft_slen(key));
-		key = ft_concat(key, tmp, TRUE);
+		key = ft_concat(key, tmp, True);
 	}
 	return (key);
 }

@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <ft_str.h>
 #include "arg_tools.h"
 
 void		cleanup(t_line *in, t_options *opt, t_args *args)
@@ -34,10 +35,10 @@ t_bool		is_valid_command(t_args *args)
 	int	i;
 
 	i = 0;
-	while (g_implemented_commands[i].command_name)
-		if (ft_strequ(args->command, g_implemented_commands[i++].command_name))
-			return (TRUE);
-	return (FALSE);
+	while (g_commands[i].command_name)
+		if (ft_strequ(args->command, g_commands[i++].command_name))
+			return (True);
+	return (False);
 }
 
 /*
@@ -67,10 +68,10 @@ void		dispatch_arguments(t_args *args)
 	}
 	ask_key_vector(opt);
 	i = -1;
-	while (g_implemented_commands[++i].command_name)
-		if (ft_strequ(g_implemented_commands[i].command_name, args->command))
+	while (g_commands[++i].command_name)
+		if (ft_strequ(g_commands[i].command_name, args->command))
 		{
-			g_implemented_commands[i].f(opt, in, g_implemented_commands[i]);
+			g_commands[i].f(opt, in, g_commands[i]);
 			break ;
 		}
 	cleanup(in, opt, args);
@@ -90,9 +91,9 @@ t_args		*arg_parse(int ac, char **av)
 	t_args	*args;
 	int		i;
 
-	args = malloc(sizeof(t_args));
+	args = ft_memalloc(sizeof(t_args));
 	args->command = NULL;
-	args->op = ac > 2 ? (char **)malloc(sizeof(char *) * (ac - 1)) : NULL;
+	args->op = ac > 2 ? (char **)ft_memalloc(sizeof(char *) * (ac - 1)) : NULL;
 	if (ac < 2)
 		return (args);
 	args->command = av[1];
