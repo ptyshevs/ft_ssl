@@ -36,6 +36,7 @@ typedef struct	s_options
 	t_bool				print_key_iv;
 	t_bool				base64;
 	t_bool				encrypt;
+	t_bool				debug;
 	char				*command;
 }				t_options;
 

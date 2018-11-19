@@ -26,7 +26,8 @@ t_bool		is_valid_command(t_args *args);
 int			display_usage(t_args *args);
 void		display_options_and_exit(char *option);
 void		handle_file(int *fd, char *filename, t_bool from);
-void		dispatch_arguments(t_args *args);
+void		dispatch_arguments(t_line *in, t_options *opt);
 t_options	*parse_options(t_args *args);
+void		cleanup(t_line *in, t_options *opt, t_args *args);
 
 #endif

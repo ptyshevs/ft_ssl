@@ -64,4 +64,8 @@ static	char	*g_options_provided[] = {
 	NULL
 };
 
+
+
+// Message Digest commands and allowed options
+
 #endif

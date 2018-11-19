@@ -14,8 +14,8 @@
 # define TOOLS_H
 
 # include "libft.h"
-#include  "ft_gnls.h"
-# include "tools.h"
+# include "ft_gnls.h"
+# include "structures.h"
 
 /*
 ** index table for Base64 encoding

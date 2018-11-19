@@ -53,28 +53,18 @@ t_bool		is_valid_command(t_args *args)
 ** @param      args  The arguments structure
 */
 
-void		dispatch_arguments(t_args *args)
+void		dispatch_arguments(t_line *in, t_options *opt)
 {
-	t_options	*opt;
 	int			i;
-	t_line		*in;
 
-	opt = parse_options(args);
-	if (!(in = ft_read_fd_to_line(opt->fd_from, (t_bool)(!opt->encrypt &&
-		(opt->base64 || ft_strequ(opt->command, "base64")))))->str)
-	{
-		cleanup(in, opt, args);
-		return ;
-	}
 	ask_key_vector(opt);
 	i = -1;
 	while (g_commands[++i].command_name)
-		if (ft_strequ(g_commands[i].command_name, args->command))
+		if (ft_strequ(g_commands[i].command_name, opt->command))
 		{
 			g_commands[i].f(opt, in, g_commands[i]);
 			break ;
 		}
-	cleanup(in, opt, args);
 }
 
 /*
