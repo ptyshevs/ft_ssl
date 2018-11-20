@@ -69,7 +69,8 @@ typedef struct	s_inp
 	t_uint		block_size;  // size of the block
 	t_uc		*block;
 	t_uint		bytes_total;  // total # of bytes read
-	t_uint		block_bytes;  // returned by read
+	int			block_bytes;  // returned by read/read_string
+	t_uc		*buffer;
 }				t_inp;
 
 typedef enum	e_cmd_type
