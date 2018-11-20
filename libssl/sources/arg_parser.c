@@ -35,9 +35,13 @@ t_bool		is_valid_command(t_args *args)
 	int	i;
 
 	i = 0;
-	while (g_commands[i].command_name)
-		if (ft_strequ(args->command, g_commands[i++].command_name))
-			return (True);
+//	while (g_ciphers[i].command_name)
+//		if (ft_strequ(args->command, g_ciphers[i++].command_name))
+//			return (True);
+//	i = 0;
+//	while (g_digests[i].command)
+//		if (ft_strequ(args->command, g_digests[i++].command))
+//			return (True);
 	return (False);
 }
 
@@ -59,12 +63,12 @@ void		dispatch_arguments(t_line *in, t_options *opt)
 
 	ask_key_vector(opt);
 	i = -1;
-	while (g_commands[++i].command_name)
-		if (ft_strequ(g_commands[i].command_name, opt->command))
-		{
-			g_commands[i].f(opt, in, g_commands[i]);
-			break ;
-		}
+//	while (g_ciphers[++i].command_name)
+//		if (ft_strequ(g_ciphers[i].command_name, opt->command))
+//		{
+//			g_ciphers[i].f(opt, in, g_ciphers[i]);
+//			break ;
+//		}
 }
 
 /*

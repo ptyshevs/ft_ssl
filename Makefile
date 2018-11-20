@@ -34,7 +34,6 @@ $(EXENAME): $(LIBSSL_DEPENDENCY) $(LIBFT_DEPENDENCY) ${ODIR}/main.o
 	@echo ${GREEN}"[--------| $(EXENAME) is up to date. |---------]"${NC}
 
 $(ODIR)/%.o: %.c $(LIBSSL_HEADERS)
-	@/bin/echo -n "."
 	@gcc $(FLAGS) -o $@ -c $< -I$(LIBSSL_INCDIR) -I$(LIBFT_INCDIR)
 
 $(ODIR):

@@ -93,14 +93,14 @@ void	base64_decrypt(t_line *in, t_line *out)
 ** @return     1 if success, anything else otherwise (like, really, anything)
 */
 
-void	base64(t_options *options, t_line *in, t_command command)
-{
-	t_line	*out;
-
-	(void)command;
-	out = init_line();
-	out->len = 0;
-	options->encrypt ? base64_encrypt(in, out) : base64_decrypt(in, out);
-	out ? out_base64(options->fd_to, out, options->encrypt) : NULL;
-	clean_t_line(&out);
-}
+//void	base64(t_options *options, t_line *in, t_cipher command)
+//{
+//	t_line	*out;
+//
+//	(void)command;
+//	out = init_line();
+//	out->len = 0;
+//	options->encrypt ? base64_encrypt(in, out) : base64_decrypt(in, out);
+//	out ? out_base64(options->fd_to, out, options->encrypt) : NULL;
+//	clean_t_line(&out);
+//}

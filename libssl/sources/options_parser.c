@@ -54,9 +54,9 @@ t_bool		is_valid_option(char *option)
 	int		i;
 
 	i = 0;
-	while (g_options_provided[i])
+	while (g_ciphers_opt[i])
 	{
-		if (ft_strequ(option, g_options_provided[i++]))
+		if (ft_strequ(option, g_ciphers_opt[i++]))
 			return (True);
 	}
 	return (False);

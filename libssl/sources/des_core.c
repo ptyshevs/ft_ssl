@@ -154,24 +154,24 @@ void	des_decrypt(t_line *in, t_line *out, t_options *options, t_mode mode)
 ** @param      command  The command structure
 */
 
-void	des_map(t_options *opt, t_line *in, t_command command)
-{
-	t_line	*out;
-	t_line	*tmp;
-
-	if (!in->str)
-		return ;
-	out = init_line();
-	command.create_subkeys(opt);
-	if (opt->base64 && !opt->encrypt)
-	{
-		base64_decrypt(in, (tmp = init_line()));
-		ft_tline_replace(in, tmp);
-		clean_t_line(&tmp);
-	}
-	opt->encrypt ? des_encrypt(in, out, opt, command.f_encrypt) :
-					des_decrypt(in, out, opt, command.f_decrypt);
-	out_des(opt, out);
-	command.clean_subkeys(opt);
-	clean_t_line(&out);
-}
+//void	des_map(t_options *opt, t_line *in, t_cipher command)
+//{
+//	t_line	*out;
+//	t_line	*tmp;
+//
+//	if (!in->str)
+//		return ;
+//	out = init_line();
+//	command.create_subkeys(opt);
+//	if (opt->base64 && !opt->encrypt)
+//	{
+//		base64_decrypt(in, (tmp = init_line()));
+//		ft_tline_replace(in, tmp);
+//		clean_t_line(&tmp);
+//	}
+//	opt->encrypt ? des_encrypt(in, out, opt, command.f_encrypt) :
+//					des_decrypt(in, out, opt, command.f_decrypt);
+//	out_des(opt, out);
+//	command.clean_subkeys(opt);
+//	clean_t_line(&out);
+//}
