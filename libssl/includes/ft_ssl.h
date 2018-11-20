@@ -71,6 +71,10 @@ void	md5_dispatch(t_options *opt, t_inp *inp);
 void	sha_dispatch(t_options *opt, t_inp *inp);
 void	whirlpool_dispatch(t_options *opt, t_inp *inp);
 
+void	md5_padding(t_inp *inp);
+t_ull	md5_block(t_inp *inp);
+
+
 static t_command	g_commands[] = {
 		{"md5", HASH, &md5_dispatch, 64},
 		{"sha256", HASH, &sha_dispatch, 64},

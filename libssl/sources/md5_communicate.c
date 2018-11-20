@@ -1,3 +1,4 @@
+#include <structures.h>
 #include "ft_printf.h"
 
 void	md5_usage(void)
@@ -11,3 +12,30 @@ void	md5_invalid_opt(char *option)
 	md5_usage();
 	exit(1);
 }
+
+void	show_len(t_uc *len)
+{
+	int		i;
+
+	i = 0;
+	while (i < 8)
+	{
+		ft_printf("[%d]: %08b\n", i, len[i]);
+		i++;
+	}
+}
+
+void	show_block(t_inp *inp)
+{
+	int		i;
+
+	i = 0;
+	while (i < 64)
+	{
+		ft_printf("%08b ", inp->block[i]);
+		if (i > 1 && i % 8 == 7)
+			ft_printf("\n");
+		i++;
+	}
+}
+

@@ -97,4 +97,13 @@ typedef struct	s_inp_src
 	t_bool		is_stream;
 }				t_inp_src;
 
+typedef struct	s_md5
+{
+	t_uint	A;
+	t_uint	B;
+	t_uint	C;
+	t_uint	D;
+	t_uint	X[16];
+}				t_md5;
+
 #endif
