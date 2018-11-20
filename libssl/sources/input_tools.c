@@ -1,4 +1,5 @@
 
+#include <ft_printf.h>
 #include "tools.h"
 
 /*
@@ -36,6 +37,9 @@ void	next_block(t_inp *inp)
 	else
 		inp->block_bytes = sread(inp->buffer, inp->block, inp->block_size);
 	if (inp->block_bytes < 0)
+		ft_printf("Something bad happenned: read returned -1\n");
+//	if (inp->bits_total == 0 && inp->block_bytes > 0)
+//		inp->bits_total =
 	inp->bytes_total += inp->block_bytes;
 }
 

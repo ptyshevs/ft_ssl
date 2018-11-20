@@ -165,6 +165,7 @@ t_options	*parse_opt(t_cmd_type type, char **options)
 	t_options	*opt;
 
 	opt = ft_memalloc(sizeof(t_options));
+	opt->fd_to = 1; // move this somewhere it belongs to
 	if (type == HASH)
 		return dgst_parse_opt(opt, options);
 	else if (type == CIPHER)

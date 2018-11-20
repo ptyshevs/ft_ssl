@@ -68,7 +68,8 @@ typedef struct	s_inp
 	int			fd_from;
 	t_uint		block_size;  // size of the block
 	t_uc		*block;
-	t_uint		bytes_total;  // total # of bytes read
+	t_ull		bytes_total;  // total # of bytes read
+	t_ull		bits_total;
 	int			block_bytes;  // returned by read/read_string
 	t_uc		*buffer;
 }				t_inp;
