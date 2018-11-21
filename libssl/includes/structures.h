@@ -103,7 +103,13 @@ typedef struct	s_md5
 	t_uint	B;
 	t_uint	C;
 	t_uint	D;
-	t_uint	X[16];
+
+	t_uint	A_prev;
+	t_uint	B_prev;
+	t_uint	C_prev;
+	t_uint	D_prev;
+	t_uint			X[16];
+	t_uint			M[64];
 }				t_md5;
 
 #endif
