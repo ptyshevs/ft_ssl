@@ -17,7 +17,7 @@ t_md5	*init_state(void)
 	i = 1;
 	while (i <= 64)
 	{
-		state->M[i - 1] = (t_uint)fabs(sin(i) * (1L << 32));
+		state->M[i - 1] = (t_uint)floor(fabs(sin(i)) * (1L << 32)); // correct
 		i++;
 	}
 	return (state);
@@ -41,7 +41,7 @@ void	md5_dispatch(t_options *opt, t_inp *inp)
 		if (inp->block_bytes < inp->block_size)
 		{
 			finished = True;
-			md5_padding(inp);
+			md5_padding(inp); // correct
 		}
 		md5_block(inp, state);
 	}
