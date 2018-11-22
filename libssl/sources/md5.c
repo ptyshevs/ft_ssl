@@ -1,5 +1,6 @@
 #include <math.h>
 #include <ft_strnum.h>
+#include <ft_printf.h>
 #include "tools.h"
 
 /*
@@ -95,14 +96,13 @@ void	apply_shift(t_md5 *st, int i, t_uint (*f)(t_uint, t_uint, t_uint))
 void	collect_words(t_inp *inp, t_md5 *st)
 {
 	int		i;
-	int		j;
 
 	i = 0;
 	while (i < 16)
 	{
-		j = 0;
-		while (j < 4)
-			st->X[i] = (st->X[i] << 8) | inp->block[4 * i + j++];
+		int j = 4 * i;
+		st->X[i] = inp->block[j] | (inp->block[j + 1] << 8) |
+				(inp->block[j + 2] << 16) | (inp->block[j + 3] << 24);
 		i++;
 	}
 }
@@ -120,6 +120,7 @@ void	md5_block(t_inp *inp, t_md5 *st)
 	i = 0;
 	while (i < 64)
 	{
+//		ft_printf("A[%08x] | i[%d] | k[%d] s[%d]\n", st->A, i, g_md5_trans[i], g_md5_shifts[i]);
 		if (i < 16)
 			apply_shift(st, i, F);
 		else if (i < 32)
@@ -135,3 +136,51 @@ void	md5_block(t_inp *inp, t_md5 *st)
 	st->C += st->C_prev;
 	st->D += st->D_prev;
 }
+
+//void	md5_block(t_inp *inp, t_md5 *st)
+//{
+//	t_uint	i;
+//
+//	st->A_prev = st->A;
+//	st->B_prev = st->B;
+//	st->C_prev = st->C;
+//	st->D_prev = st->D;
+//	collect_words(inp, st);
+//	i = 0;
+//	t_uint f = 0;
+//	t_uint g = 0;
+//	while (i < 64)
+//	{
+////		ft_printf("A[%08x] | i[%d] | k[%d] s[%d]\n", st->A, i, g_md5_trans[i], g_md5_shifts[i]);
+//		if (i < 16)
+//		{
+//			f = F(st->B, st->C, st->D);
+//			g = i;
+//		}
+//		else if (i < 32)
+//		{
+//			f = G(st->B, st->C, st->D);
+//			g = (5 * i + 1) % 16;
+//		}
+//		else if (i < 48)
+//		{
+//			f = H(st->B, st->C, st->D);
+//			g = (3 * i + 5) % 16;
+//		}
+//		else
+//		{
+//			f = I(st->B, st->C, st->D);
+//			g = (7 * i) % 16;
+//		}
+//		f += st->A + st->M[i] + st->X[g];
+//		st->A = st->D;
+//		st->D = st->C;
+//		st->C = st->B;
+//		st->B += left_rotate(f, g_md5_shifts[i], 32);
+//		i++;
+//	}
+//	st->A += st->A_prev;
+//	st->B += st->B_prev;
+//	st->C += st->C_prev;
+//	st->D += st->D_prev;
+//}

@@ -10,10 +10,10 @@ t_md5	*init_state(void)
 	int		i;
 
 	state = ft_memalloc(sizeof(t_md5));
-	state->A = 0x01234567;
-	state->B = 0x89abcdef;
-	state->C = 0xfedcba98;
-	state->D = 0x76543210;
+	state->A = 0x67452301;
+	state->B = 0xefcdab89;
+	state->C = 0x98badcfe;
+	state->D = 0x10325476;
 	i = 1;
 	while (i <= 64)
 	{
@@ -23,9 +23,21 @@ t_md5	*init_state(void)
 	return (state);
 }
 
+/*
+** Since md5 returns small-endian blocks, we need to convert them back to
+** big-endian, i.e. the most significant *byte* is the first one, etc.
+*/
+
+t_uint	to_big_endian(t_uint val)
+{
+	return (((val & 0x000000FF) << 24) | ((val & 0x0000FF00) << 8) |
+			((val & 0x00FF0000) >> 8) | ((val & 0xFF000000) >> 24));
+}
+
 void	show_digest(t_options *opt, t_md5 *st)
 {
-	ft_printf("%08x%08x%08x%08x\n", st->A, st->B, st->C, st->D);
+	ft_printf("%08x%08x%08x%08x\n", to_big_endian(st->A), to_big_endian(st->B),
+			to_big_endian(st->C), to_big_endian(st->D));
 }
 
 void	md5_dispatch(t_options *opt, t_inp *inp)
