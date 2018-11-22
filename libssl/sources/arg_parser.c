@@ -35,6 +35,8 @@ t_bool		is_valid_command(t_args *args)
 	int	i;
 
 	i = 0;
+	(void)i;
+	(void)args;
 //	while (g_ciphers[i].command_name)
 //		if (ft_strequ(args->command, g_ciphers[i++].command_name))
 //			return (True);
@@ -63,6 +65,8 @@ void		dispatch_arguments(t_line *in, t_options *opt)
 
 	ask_key_vector(opt);
 	i = -1;
+	(void)i;
+	(void)in;
 //	while (g_ciphers[++i].command_name)
 //		if (ft_strequ(g_ciphers[i].command_name, opt->command))
 //		{

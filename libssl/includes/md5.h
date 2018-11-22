@@ -41,6 +41,9 @@ t_md5	*init_state(void);
 void	md5_padding(t_inp *inp);
 void	md5_block(t_inp *inp, t_md5 *st);
 void	md5_show_digest(t_options *opt, t_md5 *st);
+void	md5_invalid_opt(char *option);
+void	next_block(t_inp *inp);
+void	show_block(t_inp *inp);
 
 
 static t_uc g_md5_trans[64] = {

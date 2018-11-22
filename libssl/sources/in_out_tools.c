@@ -14,6 +14,7 @@
 #include <ft_str.h>
 #include <ft_tell.h>
 #include <ft_printf.h>
+#include <md5.h>
 #include "ft_ssl.h"
 
 /*
@@ -114,6 +115,8 @@ void	out_des(t_options *options, t_line *out)
 
 t_options	*cipher_parse_opt(t_options *opt, char **options)
 {
+	(void)opt;
+	(void)options;
 	return (NULL);
 }
 
@@ -137,6 +140,8 @@ t_options	*dgst_parse_opt(t_options *opt, char **options)
 	static t_bool	p_met;
 
 //	add_inp_src(&opt->inp_srcs, "stdin", 0, True);
+	if (!options)
+		return (opt);
 	while (options[i])
 	{
 		if (ft_strequ(options[i], "-p") && p_met)

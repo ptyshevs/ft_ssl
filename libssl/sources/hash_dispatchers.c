@@ -25,7 +25,7 @@ void	md5_dispatch(t_options *opt, t_inp *inp)
 	while (!finished)
 	{
 		next_block(inp);
-		if (inp->block_bytes < inp->block_size)
+		if ((t_uint)inp->block_bytes < inp->block_size)
 		{
 			finished = True;
 			md5_padding(inp); // correct
@@ -38,9 +38,12 @@ void	md5_dispatch(t_options *opt, t_inp *inp)
 
 void	sha_dispatch(t_options *opt, t_inp *inp)
 {
+	(void)opt;
+	(void)inp;
 }
 
 void	whirlpool_dispatch(t_options *opt, t_inp *inp)
 {
-
+	(void)opt;
+	(void)inp;
 }

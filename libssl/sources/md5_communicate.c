@@ -20,6 +20,7 @@ void	md5_usage(void)
 
 void	md5_invalid_opt(char *option)
 {
+	(void)option;
 	ft_printf("md5: option requires an argument -- s\n");
 	md5_usage();
 	exit(1);
@@ -75,6 +76,7 @@ static t_uint	to_big_endian(t_uint val)
 
 void	md5_show_digest(t_options *opt, t_md5 *st)
 {
+	(void)opt;
 	ft_printf("%08x%08x%08x%08x\n", to_big_endian(st->A), to_big_endian(st->B),
 			to_big_endian(st->C), to_big_endian(st->D));
 }

@@ -10,10 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <ft_str.h>
-#include <ft_tell.h>
-#include <ft_printf.h>
 #include "arg_tools.h"
+#include "tools.h"
 
 
 void	apply_to_srcs(t_command *command, t_options *opt)
