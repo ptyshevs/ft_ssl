@@ -69,7 +69,6 @@ typedef struct	s_inp
 	t_uint		block_size;  // size of the block
 	t_uc		*block;
 	t_ull		bytes_total;  // total # of bytes read
-	t_ull		bits_total;
 	int			block_bytes;  // returned by read/read_string
 	t_uc		*buffer;
 }				t_inp;
@@ -97,19 +96,5 @@ typedef struct	s_inp_src
 	t_bool		is_stream;
 }				t_inp_src;
 
-typedef struct	s_md5
-{
-	t_uint	A;
-	t_uint	B;
-	t_uint	C;
-	t_uint	D;
-
-	t_uint	A_prev;
-	t_uint	B_prev;
-	t_uint	C_prev;
-	t_uint	D_prev;
-	t_uint			X[16];
-	t_uint			M[64];
-}				t_md5;
 
 #endif
