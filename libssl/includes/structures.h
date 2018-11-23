@@ -80,7 +80,7 @@ typedef struct	s_inp
 	t_ull		bytes_total;  // total # of bytes read
 	int			block_bytes;  // returned by read/read_string
 	t_uc		*buffer;
-	int			buf_size;
+	t_uint		buf_size;
 	t_uint		pos;
 }				t_inp;
 

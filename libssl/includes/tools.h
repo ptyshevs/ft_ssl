@@ -17,7 +17,11 @@
 # include "ft_gnls.h"
 # include "structures.h"
 
-# define BUF_MULT 10
+/*
+** Regulate number of blocks read from the input at a time
+*/
+
+# define BUF_MULT 50
 
 /*
 ** index table for Base64 encoding

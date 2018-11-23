@@ -58,7 +58,6 @@ int		main(int ac, char **av)
 //		if (inp)
 //			dispatch_arguments(in, opt);
 //		cleanup(in, opt, args);
-		system("leaks ft_ssl");
 	}
 	else
 		return (display_usage(args));

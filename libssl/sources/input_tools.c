@@ -32,13 +32,17 @@ int		buf_read(t_inp *inp)
 
 int		file_read(t_inp *inp)
 {
+	ssize_t		read_ret;
+
 	if (inp->pos == inp->buf_size)
 	{
-		inp->buf_size = (int)read(inp->src->fd, inp->buffer,
+		read_ret = (int)read(inp->src->fd, inp->buffer,
 								inp->block_size * BUF_MULT);
 		inp->pos = 0;
-		if (inp->buf_size == -1)
+		if (read_ret == -1)
 			return (-1);
+		else
+			inp->buf_size = (t_uint)read_ret;
 	}
 	return buf_read(inp);
 }
