@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <ft_str.h>
 #include "ft_printf.h"
 #include "structures.h"
 #include "tools.h"
@@ -35,8 +36,10 @@ void	show_digest(t_options *opt, t_inp *inp, char *hash_algo, t_uc *digest)
 	}
 	else
 	{
-		if (inp->src->is_stream)
+		if (inp->src->is_stream && ft_slen(inp->src->string))
 			ft_printf("%s(%s) = %s\n", hash_algo, inp->src->string, digest);
+		else if (inp->src->is_stream)  // stdin
+			ft_printf("%s\n", digest);
 		else
 			ft_printf("%s(\"%s\") = %s\n", hash_algo, inp->src->string, digest);
 	}
@@ -59,6 +62,8 @@ void	md5_dispatch(t_options *opt, t_inp *inp)
 	finished = False;
 	while (!finished && next_block(inp))
 	{
+		if (inp->src->fd == 0 && opt->stdin_append)
+			write(1, inp->block, inp->block_bytes);
 		if ((t_uint)inp->block_bytes < inp->block_size)
 		{
 			finished = True;

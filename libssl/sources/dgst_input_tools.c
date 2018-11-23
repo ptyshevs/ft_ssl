@@ -1,12 +1,23 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   input_tools.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ptyshevs <ptyshevs@student.unit.ua>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/11/23 20:54:10 by ptyshevs          #+#    #+#             */
+/*   Updated: 2018/11/23 20:55:18 by ptyshevs         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 
 #include <ft_printf.h>
 #include <ft_str.h>
 #include "tools.h"
 
 /*
- * Copy bytes from buffer into block
- * (used for processing -s flag in the same fashion)
- */
+** Copy bytes from buffer into block
+*/
 
 int		buf_read(t_inp *inp)
 {
@@ -57,8 +68,10 @@ t_bool	next_block(t_inp *inp)
 {
 	if (inp->src->fd >= 0)
 		inp->block_bytes = file_read(inp);
-	else
+	else if (inp->src->fd == -2)
 		inp->block_bytes = buf_read(inp);
+	else if (inp->src->fd == -1)
+		return (False);
 	if (inp->block_bytes < 0)
 		return (False);
 //	if (inp->bits_total == 0 && inp->block_bytes > 0)

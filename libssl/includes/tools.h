@@ -55,10 +55,14 @@ t_ull				parse_hex(char *nbr);
 char				*pad_key(char *key, size_t len);
 
 t_command			*map_command(char *command);
+void				add_inp_src(t_list **inp_sources, char *str,
+								int fd, t_bool is_stream);
+
 t_options			*parse_opt(t_cmd_type type, char **options);
 void				show_inp_sources(t_list *inp_srcs);
 t_inp				*init_input(t_command *command, t_inp_src *src);
 void				bad_read_error(char *filename);
+t_options			*dgst_parse_opt(t_options *opt, char **options);
 
 
 

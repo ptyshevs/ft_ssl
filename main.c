@@ -18,6 +18,7 @@ void	input_cleanup(t_inp **ainp)
 	ft_memdel((void **)&(*ainp)->block);
 	ft_memdel((void **)&(*ainp)->buffer);
 	ft_memdel((void **)ainp);
+
 }
 
 void	apply_to_srcs(t_command *command, t_options *opt)

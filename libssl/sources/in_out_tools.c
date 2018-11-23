@@ -141,37 +141,6 @@ void	add_inp_src(t_list **inp_sources, char *str, int fd, t_bool is_stream)
 	ft_lstappend(inp_sources, ft_lstnew(&src, sizeof(t_inp_src)));
 }
 
-t_options	*dgst_parse_opt(t_options *opt, char **options)
-{
-	static int		i;
-	static t_bool	p_met;
-
-//	add_inp_src(&opt->inp_srcs, "stdin", 0, True);
-	if (!options)
-		return (opt);
-	while (options[i])
-	{
-		if (ft_strequ(options[i], "-p") && p_met)
-			add_inp_src(&opt->inp_srcs, "stdin", 0, True);
-		else if (ft_strequ(options[i], "-p") && !p_met)
-			p_met = True;
-		else if (ft_strequ(options[i], "-q"))
-			opt->quiet = True;
-		else if (ft_strequ(options[i], "-r"))
-			opt->reverse = True;
-		else if (ft_strequ(options[i], "-s") && !options[i + 1])
-			md5_invalid_opt(options[i]);
-		else if (ft_strequ(options[i], "-s"))
-			add_inp_src(&opt->inp_srcs, options[i++ + 1], -1, False);
-		else
-			add_inp_src(&opt->inp_srcs, options[i], -1, True);
-		i++;
-	}
-	if (opt->quiet)  // overrides reverse
-		opt->reverse = False;
-	return (opt);
-}
-
 t_options	*parse_opt(t_cmd_type type, char **options)
 {
 	t_options	*opt;
@@ -179,9 +148,9 @@ t_options	*parse_opt(t_cmd_type type, char **options)
 	opt = ft_memalloc(sizeof(t_options));
 	opt->fd_to = 1; // move this somewhere it belongs to
 	if (type == HASH)
-		return dgst_parse_opt(opt, options);
+		return (dgst_parse_opt(opt, options));
 	else if (type == CIPHER)
-		return cipher_parse_opt(opt, options);
+		return (cipher_parse_opt(opt, options));
 	else
 		ft_panic(1, "Unrecognized command type\n");
 	return (NULL);
@@ -194,8 +163,8 @@ void	show_inp_sources(t_list *inp_srcs)
 	while (inp_srcs)
 	{
 		src = (t_inp_src *)inp_srcs->content;
-		ft_printf("%10s [fd: %d | stream: %d]\n",
-				src->string, src->fd, src->is_stream);
+		ft_printf("%10s [fd: %d | stream: %d] -q [%d] -r [%d]\n", src->string,
+				src->fd, src->is_stream, src->quiet, src->reversed);
 		inp_srcs = inp_srcs->next;
 	}
 }
