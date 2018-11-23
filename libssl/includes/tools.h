@@ -51,7 +51,8 @@ char				*pad_key(char *key, size_t len);
 t_command			*map_command(char *command);
 t_options			*parse_opt(t_cmd_type type, char **options);
 void				show_inp_sources(t_list *inp_srcs);
-t_inp	*init_input(t_command *command, t_options *opt, t_inp_src *src);
+t_inp				*init_input(t_command *command, t_inp_src *src);
+void				bad_read_error(char *filename);
 
 
 

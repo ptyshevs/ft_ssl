@@ -56,6 +56,9 @@ void	collect_words(t_inp *inp, t_md5 *st)
 	}
 }
 
+/*
+ * COMMENT THIS
+ */
 
 void	md5_block(t_inp *inp, t_md5 *st)
 {

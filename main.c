@@ -13,6 +13,11 @@
 #include "arg_tools.h"
 #include "tools.h"
 
+void	input_cleanup(t_inp **ainp)
+{
+	ft_memdel((void **)&(*ainp)->block);
+	ft_memdel((void **)ainp);
+}
 
 void	apply_to_srcs(t_command *command, t_options *opt)
 {
@@ -24,9 +29,9 @@ void	apply_to_srcs(t_command *command, t_options *opt)
 	while (tmp)
 	{
 		src = (t_inp_src *)tmp->content;
-		inp = init_input(command, opt, src);
+		inp = init_input(command, src);
 		command->f(opt, inp);
-		break ; // for now only process the first input
+		input_cleanup(&inp);
 		tmp = tmp->next;
 	}
 }
@@ -43,6 +48,7 @@ int		main(int ac, char **av)
 	{
 		opt = parse_opt(command->type, args->op);
 		show_inp_sources(opt->inp_srcs);
+
 		if (command->type == HASH)
 			apply_to_srcs(command, opt);
 //		in = ft_read_fd_to_line(opt->fd_from, (t_bool)(!opt->encrypt &&
@@ -51,6 +57,7 @@ int		main(int ac, char **av)
 //		if (inp)
 //			dispatch_arguments(in, opt);
 //		cleanup(in, opt, args);
+		system("leaks ft_ssl");
 	}
 	else
 		return (display_usage(args));

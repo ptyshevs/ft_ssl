@@ -120,18 +120,25 @@ t_options	*cipher_parse_opt(t_options *opt, char **options)
 	return (NULL);
 }
 
+/*
+** Append input source to list of sources
+**
+** Notes:
+**     Be careful with structure - zero it and use local scope, since ft_lstnew
+**     will make copy of it in dynamic memory
+*/
 
 void	add_inp_src(t_list **inp_sources, char *str, int fd, t_bool is_stream)
 {
-	t_inp_src	*src;
+	t_inp_src	src;
 
-	src = ft_memalloc(sizeof(t_inp_src));
-	src->fd = fd;
-	src->string = str;
-	src->is_stream = is_stream;
+	ft_bzero(&src, sizeof(t_inp_src));
+	src.fd = fd;
+	src.string = ft_strdup(str);
+	src.is_stream = is_stream;
 	if (fd == -1 && is_stream)
-		src->fd = open(str, O_RDONLY);
-	ft_lstappend(inp_sources, ft_lstnew(src, sizeof(t_inp_src)));
+		src.fd = open(str, O_RDONLY);
+	ft_lstappend(inp_sources, ft_lstnew(&src, sizeof(t_inp_src)));
 }
 
 t_options	*dgst_parse_opt(t_options *opt, char **options)

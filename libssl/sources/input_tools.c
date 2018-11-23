@@ -7,53 +7,52 @@
  * (used for processing -s flag in the same fashion)
  */
 
-int		sread(const t_uc *str, void *to, ssize_t size)
+int		sread(t_inp *inp)
 {
-	static int	pos;
 	t_uint		i;
 
-	if (!to)
-		pos = 0;
-	if (!str)
+	if (!inp->buffer)
 		return (-1);
 	i = 0;
-	while (str[pos] && i < size)
+	while (inp->buffer[inp->pos] && i < inp->block_size)
 	{
-		((char *)to)[i] = str[pos];
+		((char *)inp->block)[i] = inp->buffer[inp->pos];
 		i++;
-		pos++;
+		inp->pos++;
 	}
 	return (i);
 }
 
 /*
  * Read next block from the input source
+ *
+ * @return: True if read successfully, else False
  */
 
-void	next_block(t_inp *inp)
+t_bool	next_block(t_inp *inp)
 {
-	if (inp->fd_from >= 0)
-		inp->block_bytes = (int)read(inp->fd_from, inp->block, inp->block_size);
+	if (inp->src->fd >= 0)
+		inp->block_bytes = (int)read(inp->src->fd, inp->block, inp->block_size);
 	else
-		inp->block_bytes = sread(inp->buffer, inp->block, inp->block_size);
+		inp->block_bytes = sread(inp);
 	if (inp->block_bytes < 0)
-		ft_printf("Something bad happenned: read returned -1\n");
+		return (False);
 //	if (inp->bits_total == 0 && inp->block_bytes > 0)
 //		inp->bits_total =
 	inp->bytes_total += inp->block_bytes;
+	return (True);
 }
 
 /*
- * Initialize input structure, store block size and read first block
+ * Initialize input inp->bufferucture, store block size and read first block
  */
 
-t_inp		*init_input(t_command *command, t_options *opt, t_inp_src *src)
+t_inp		*init_input(t_command *command, t_inp_src *src)
 {
 	t_inp	*inp;
 
 	inp = ft_memalloc(sizeof(t_inp));
-	inp->fd_from = src->fd;
-	inp->fd_to = opt->fd_to;
+	inp->src = src;
 	inp->block_size = command->block_size;
 	inp->block = ft_memalloc(sizeof(t_uc) * inp->block_size);
 	inp->buffer = src->is_stream ? NULL : (t_uc *)src->string;

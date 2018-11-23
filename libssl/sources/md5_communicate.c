@@ -13,19 +13,6 @@
 #include "md5.h"
 #include "ft_printf.h"
 
-void	md5_usage(void)
-{
-	ft_printf("usage: md5 [-pqr] [-s string] [files ...]\n");
-}
-
-void	md5_invalid_opt(char *option)
-{
-	(void)option;
-	ft_printf("md5: option requires an argument -- s\n");
-	md5_usage();
-	exit(1);
-}
-
 void	show_len(t_uc *len)
 {
 	int		i;
@@ -69,14 +56,20 @@ static t_uint	to_big_endian(t_uint val)
 }
 
 
-
 /*
-** Display MD5 digest according to the options providede
+** Collect output from md5 into string digest
+** Don't forget to free
 */
 
-void	md5_show_digest(t_options *opt, t_md5 *st)
+t_uc	*md5_collect_digest(t_md5 *state)
 {
-	(void)opt;
-	ft_printf("%08x%08x%08x%08x\n", to_big_endian(st->A), to_big_endian(st->B),
-			to_big_endian(st->C), to_big_endian(st->D));
+	t_uc	*res;
+
+	res = (t_uc *)ft_sprintf("%08x%08x%08x%08x",
+			to_big_endian(state->A),
+			to_big_endian(state->B),
+			to_big_endian(state->C),
+			to_big_endian(state->D));
+	return (res);
 }
+
