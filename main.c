@@ -16,6 +16,7 @@
 void	input_cleanup(t_inp **ainp)
 {
 	ft_memdel((void **)&(*ainp)->block);
+	ft_memdel((void **)&(*ainp)->buffer);
 	ft_memdel((void **)ainp);
 }
 

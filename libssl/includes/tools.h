@@ -17,6 +17,8 @@
 # include "ft_gnls.h"
 # include "structures.h"
 
+# define BUF_MULT 10
+
 /*
 ** index table for Base64 encoding
 */
