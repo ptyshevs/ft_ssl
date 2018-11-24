@@ -24,6 +24,17 @@
 # define BUF_MULT 50
 
 /*
+ * Mask for 32-bit word
+ */
+# define M32 0xFFFFFFFFL
+
+/*
+ * Mask for 64-bit word
+ */
+
+# define M64 0xFFFFFFFFFFFFFFFFL
+
+/*
 ** index table for Base64 encoding
 */
 
@@ -43,6 +54,9 @@ t_ull				str_to_block(t_uc *str);
 t_ull				add_padding(t_uc *remainder, long long value);
 
 t_ull				ft_rot(t_ull num, t_ull mask, int shift, t_bool left);
+t_ull	rotl(t_ull val, t_ull shift, t_ull w);
+t_ull	rotr(t_ull val, t_ull shift, t_ull w);
+
 t_ull				*get_subkeys(t_ull *keys, t_ull key, t_bool encrypt);
 t_ull				expand_block(t_ull block);
 

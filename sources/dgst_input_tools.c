@@ -96,7 +96,7 @@ t_inp		*init_input(t_command *command, t_inp_src *src)
 		inp->buffer = ft_memalloc(sizeof(t_uc) * inp->block_size * BUF_MULT);
 	else
 	{
-		// string is strdup'ed, so no problem freeing this after processing
+		// string is strdup'ed, so no problem freeing this field after processing
 		inp->buffer = (t_uc *)src->string;
 		inp->buf_size = (int)ft_slen(src->string);
 	}

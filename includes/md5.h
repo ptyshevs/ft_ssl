@@ -15,6 +15,10 @@
 # include "libft.h"
 # include "structures.h"
 
+/*
+** State structure for MD5 algorithm
+*/
+
 typedef struct	s_md5
 {
 	t_uint	A;
@@ -30,15 +34,17 @@ typedef struct	s_md5
 	t_uint			M[64];
 }				t_md5;
 
+/*
+** Non-linear function operating on 32-bit words
+*/
 
 t_uint	F(t_uint x, t_uint y, t_uint z);
 t_uint	G(t_uint x, t_uint y, t_uint z);
 t_uint	H(t_uint x, t_uint y, t_uint z);
 t_uint	I(t_uint x, t_uint y, t_uint z);
 
-t_uint	left_rotate(t_uint val, t_uint shift, t_uint type_len);
 t_md5	*init_state(void);
-void	md5_padding(t_inp *inp);
+void	md_padding(t_inp *inp);
 void	md5_block(t_inp *inp, t_md5 *st);
 void	md5_invalid_opt(char *option);
 t_bool	next_block(t_inp *inp);

@@ -64,7 +64,7 @@ void	md5_message_size(t_inp *inp, t_uc *len)
 ** Add padding to the message
 */
 
-void	md5_padding(t_inp *inp)
+void	md_padding(t_inp *inp)
 {
 	int		i;
 	int		j;

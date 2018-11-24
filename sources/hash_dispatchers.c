@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include <ft_str.h>
+#include <sha.h>
 #include "ft_printf.h"
 #include "structures.h"
 #include "tools.h"
@@ -63,11 +64,11 @@ void	md5_dispatch(t_options *opt, t_inp *inp)
 	while (!finished && next_block(inp))
 	{
 		if (inp->src->fd == 0 && opt->stdin_append)
-			write(1, inp->block, inp->block_bytes);
+			write(1, inp->block, (size_t)inp->block_bytes);
 		if ((t_uint)inp->block_bytes < inp->block_size)
 		{
 			finished = True;
-			md5_padding(inp);
+			md_padding(inp);
 		}
 		md5_block(inp, state);
 	}
@@ -84,8 +85,32 @@ void	md5_dispatch(t_options *opt, t_inp *inp)
 
 void	sha_dispatch(t_options *opt, t_inp *inp)
 {
-	(void)opt;
-	(void)inp;
+	t_md5	*state;
+	t_bool	finished;
+	t_uc	*output;
+
+	state = init_state();
+	finished = False;
+	while (!finished && next_block(inp))
+	{
+		if (inp->src->fd == 0 && opt->stdin_append)
+			write(1, inp->block, (size_t)inp->block_bytes);
+		if ((t_uint)inp->block_bytes < inp->block_size)
+		{
+			finished = True;
+			md_padding(inp);
+		}
+		sha256_block(inp, state);
+	}
+	if (!finished)  // (s)read failed
+	{
+		ft_memdel((void **)&state);
+		return bad_read_error(inp->src->string);
+	}
+//	show_block(inp);
+	output = md5_collect_digest(state);
+	show_digest(opt, inp, "MD5", output);
+	md5_cleanup(&output, &state);
 }
 
 void	whirlpool_dispatch(t_options *opt, t_inp *inp)

@@ -31,10 +31,3 @@ t_uint I(t_uint x, t_uint y, t_uint z)
 {
 	return (y ^ (x | (~z)));
 }
-
-t_uint	left_rotate(t_uint val, t_uint shift, t_uint type_len)
-{
-	if (shift > type_len)
-		shift %= type_len;
-	return ((val << shift) | (val >> (type_len - shift)));
-}

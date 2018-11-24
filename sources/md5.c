@@ -23,22 +23,22 @@ void	apply_shift(t_md5 *st, int i, t_uint (*f)(t_uint, t_uint, t_uint))
 	if (i % 4 == 0)
 	{
 		sum = st->A + f(st->B, st->C, st->D) + st->X[g_md5_trans[i]] + st->M[i];
-		st->A = st->B + left_rotate(sum, g_md5_shifts[i], 32);
+		st->A = st->B + (t_uint)rotl(sum, g_md5_shifts[i], 32);
 	}
 	else if (i % 4 == 1)
 	{
 		sum = st->D + f(st->A, st->B, st->C) + st->X[g_md5_trans[i]] + st->M[i];
-		st->D = st->A + left_rotate(sum, g_md5_shifts[i], 32);
+		st->D = st->A + (t_uint)rotl(sum, g_md5_shifts[i], 32);
 	}
 	else if (i % 4 == 2)
 	{
 		sum = st->C + f(st->D, st->A, st->B) + st->X[g_md5_trans[i]] + st->M[i];
-		st->C = st->D + left_rotate(sum, g_md5_shifts[i], 32);
+		st->C = st->D + (t_uint)rotl(sum, g_md5_shifts[i], 32);
 	}
 	else
 	{
 		sum = st->B + f(st->C, st->D, st->A) + st->X[g_md5_trans[i]] + st->M[i];
-		st->B = st->C + left_rotate(sum, g_md5_shifts[i], 32);
+		st->B = st->C + (t_uint)rotl(sum, g_md5_shifts[i], 32);
 	}
 }
 

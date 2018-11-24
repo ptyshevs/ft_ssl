@@ -40,26 +40,7 @@ void	block_to_str(t_ull block, t_line *out, int j, t_bool last_block)
 	out->len -= last_block ? (int)out->str[out->len - 1] : 0;
 }
 
-/*
-** @brief      Rotate bits in a number, preventing overflow using mask.
-**
-** @note       Using in subkeys generation
-**
-** @param      num    The number
-** @param      mask   The mask
-** @param      shift  The shift
-** @param      left   Whether to perform left or right rotation
-**
-** @return     Number with bits rotated
-*/
 
-t_ull	ft_rot(t_ull num, t_ull mask, int shift, t_bool left)
-{
-	if (left)
-		return (((num << shift) | (num >> (28 - shift))) & mask);
-	else
-		return (((num >> shift) | (num << (28 - shift))) & mask);
-}
 
 /*
 ** @brief      Generate 16 48-bit subkeys.
