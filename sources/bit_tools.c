@@ -57,10 +57,12 @@ t_ull	ft_rot(t_ull num, t_ull mask, int shift, t_bool left)
 ** Bit shift
 */
 
-t_ull	ft_shr(t_ull num, t_ull mask, int shift, t_bool left)
+t_ull	shr(t_ull val, t_ull shift, t_ull mask)
 {
-	if (left)
-		return ((num << shift) & mask);
-	else
-		return ((num >> shift) & mask);
+	return ((val >> shift) & mask);
+}
+
+t_ull	shl(t_ull val, t_ull shift, t_ull mask)
+{
+	return ((val << shift) & mask);
 }

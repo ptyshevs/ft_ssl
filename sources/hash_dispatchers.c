@@ -83,6 +83,18 @@ void	md5_dispatch(t_options *opt, t_inp *inp)
 	md5_cleanup(&output, &state);
 }
 
+/*
+** TODO make init state work for both md5 and sha
+*/
+
+t_state	*base_init_state(char *command)
+{
+	t_state		*st;
+
+	st = ft_memalloc(sizeof(t_state));
+	return (st);
+}
+
 void	sha_dispatch(t_options *opt, t_inp *inp)
 {
 	t_md5	*state;
