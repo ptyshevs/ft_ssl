@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   hash_dispatchers.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ptyshevs <ptyshevs@student.unit.ua>        +#+  +:+       +#+        */
+/*   By: ptyshevs <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/22 23:12:52 by ptyshevs          #+#    #+#             */
-/*   Updated: 2018/11/22 23:13:00 by ptyshevs         ###   ########.fr       */
+/*   Updated: 2019/08/16 21:06:17 by ptyshevs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include "structures.h"
 #include "tools.h"
 #include "md5.h"
+
 
 /*
 ** Display digest using appropriate formatting
@@ -87,21 +88,52 @@ void	md5_dispatch(t_options *opt, t_inp *inp)
 ** TODO make init state work for both md5 and sha
 */
 
-t_state	*base_init_state(char *command)
-{
-	t_state		*st;
+//t_state	*base_init_state(char *command)
+//{
+//	t_state		*st;
+//
+//	st = ft_memalloc(sizeof(t_state));
+//	return (st);
+//}
 
-	st = ft_memalloc(sizeof(t_state));
-	return (st);
+void	sha_cleanup(t_uc **aoutput, t_sha **astate)
+{
+	ft_memdel((void **)aoutput);
+	ft_memdel((void **)&(*astate)->H);
+	ft_memdel((void **)astate);
+}
+
+/*
+ * Directly copy-pasted from md5_communicate
+ */
+static t_uint	to_big_endian(t_uint val)
+{
+	return (((val & 0x000000FF) << 24) | ((val & 0x0000FF00) << 8) |
+			((val & 0x00FF0000) >> 8) | ((val & 0xFF000000) >> 24));
+}
+
+t_uc	*sha_collect_digest(t_sha *state)
+{
+	char	*res;
+	int		i;
+
+	res = NULL;
+	i = 0;
+	while (i < 8)
+	{
+		res = ft_concat(res, ft_sprintf("%08x", to_big_endian(state->H[i])), True);
+		i++;
+	}
+	return ((t_uc *)res);
 }
 
 void	sha_dispatch(t_options *opt, t_inp *inp)
 {
-	t_md5	*state;
+	t_sha	*state;
 	t_bool	finished;
 	t_uc	*output;
 
-	state = init_state();
+	state = init_sha();
 	finished = False;
 	while (!finished && next_block(inp))
 	{
@@ -120,9 +152,9 @@ void	sha_dispatch(t_options *opt, t_inp *inp)
 		return bad_read_error(inp->src->string);
 	}
 //	show_block(inp);
-	output = md5_collect_digest(state);
-	show_digest(opt, inp, "MD5", output);
-	md5_cleanup(&output, &state);
+	output = sha_collect_digest(state);
+	show_digest(opt, inp, "SHA256", output);
+	sha_cleanup(&output, &state);
 }
 
 void	whirlpool_dispatch(t_options *opt, t_inp *inp)

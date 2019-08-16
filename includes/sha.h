@@ -3,30 +3,31 @@
 /*                                                        :::      ::::::::   */
 /*   sha.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ptyshevs <ptyshevs@student.unit.ua>        +#+  +:+       +#+        */
+/*   By: ptyshevs <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/24 14:00:57 by ptyshevs          #+#    #+#             */
-/*   Updated: 2018/11/24 14:01:32 by ptyshevs         ###   ########.fr       */
+/*   Updated: 2019/08/16 20:50:33 by ptyshevs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SHA_H
 # define SHA_H
-#include <md5.h>
+//#include <md5.h>
 #include "structures.h"
 
 
-typedef struct	s_state
+typedef struct	s_sha
 {
 	t_uint	*H;  // internal state of hash
 
 	t_uint	X[16];  // 64-byte block split into 16 4-byte words
 	t_uint	M[64];  // message shedule
-}				t_state;
+}				t_sha;
 
-void	sha256_block(t_inp *inp, t_state *st);
+t_sha	*init_sha(void);
+void	sha256_block(t_inp *inp, t_sha *st);
 
-t_uint g_sha256_k[64] = {
+static t_uint g_sha256_k[64] = {
 		0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5,
 		0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
 		0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3,
@@ -43,6 +44,11 @@ t_uint g_sha256_k[64] = {
 		0x391c0cb3, 0x4ed8aa4a, 0x5b9cca4f, 0x682e6ff3,
 		0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208,
 		0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2
+};
+
+static t_uint g_sha256_h0[8] = {
+		0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a,
+		0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19
 };
 
 

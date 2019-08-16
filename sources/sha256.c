@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   sha256.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ptyshevs <ptyshevs@student.unit.ua>        +#+  +:+       +#+        */
+/*   By: ptyshevs <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/24 14:10:49 by ptyshevs          #+#    #+#             */
-/*   Updated: 2018/11/24 14:10:51 by ptyshevs         ###   ########.fr       */
+/*   Updated: 2019/08/16 20:52:14 by ptyshevs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
+#include <math.h>
 #include <tools.h>
 #include "sha.h"
 
@@ -44,7 +44,7 @@ t_uint SSIG1(t_uint x)
 	return ((t_uint)(rotr(x, 17, 32) ^ rotr(x, 19, 32) ^ shr(x, 10, M32)));
 }
 
-void	collect_words(t_inp *inp, t_sha *st)
+void	sha_collect_words(t_inp *inp, t_sha *st)
 {
 	int		i;
 
@@ -62,5 +62,41 @@ void	sha256_block(t_inp *inp, t_sha *st)
 {
 	(void)inp;
 	(void)st;
-	collect_words(inp, st);
+//    t_sha	*state;
+//    int		i;
+//
+//    state = ft_memalloc(sizeof(t_md5));
+//    state->A = 0x67452301;
+//    state->B = 0xefcdab89;
+//    state->C = 0x98badcfe;
+//    state->D = 0x10325476;
+//    i = 1;
+//    while (i <= 64)
+//    {
+//        state->M[i - 1] = (t_uint)floor(fabs(sin(i)) * (1L << 32)); // correct
+//        i++;
+//    }
+}
+
+t_sha   *init_sha(void)
+{
+    t_sha   *state;
+    int     i;
+
+    state = ft_memalloc(sizeof(t_sha));
+    state->H = ft_memalloc(sizeof(t_uint) * 8);
+
+    i = 0;
+    while (i < 8)
+    {
+        state->H[i] = g_sha256_h0[i];
+        i++;
+    }
+    i = 0;
+    while (i < 64)
+    {
+        state->M[i] = g_sha256_k[i];
+        i++;
+    }
+    return (state);
 }
