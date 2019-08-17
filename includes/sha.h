@@ -18,7 +18,9 @@
 
 typedef struct	s_sha
 {
+	t_uint	H_size;
 	t_uint	*H;  // internal state of hash
+	t_uint	*H_prev;
 
 	t_uint	X[16];  // 64-byte block split into 16 4-byte words
 	t_uint	M[64];  // message shedule
