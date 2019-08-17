@@ -80,7 +80,7 @@ void	prepare_message_shedule(t_sha *st)
 
 void	show_internal_state(t_sha *st)
 {
-	int i = 0;
+	t_uint i = 0;
 	while (i < st->H_size) {
 		ft_printf("%08x ", st->H[i]);
 		i++;
@@ -110,7 +110,7 @@ void	sha256_block(t_inp *inp, t_sha *st)
 	ft_memcpy(st->H_prev, st->H, st->H_size * sizeof(t_uint));
 	sha_collect_words(inp, st);
 	prepare_message_shedule(st);
-	show_message_shedule(st);
+//	show_message_shedule(st);
 	t_uint a = st->H[0];
 	t_uint b = st->H[1];
 	t_uint c = st->H[2];
@@ -145,13 +145,13 @@ void	sha256_block(t_inp *inp, t_sha *st)
 	st->H[7] += h;
 }
 
-t_sha   *init_sha(void)
+t_sha	*init_sha(void)
 {
-	t_sha   *state;
-	int     i;
+	t_sha	*state;
+	int		i;
 
 	state = ft_memalloc(sizeof(t_sha));
-	state->H_size = 8; // sha256
+	state->H_size = 8; // sha256, probably differs for other versions
 	state->H = ft_memalloc(sizeof(t_uint) * state->H_size);
 	state->H_prev = ft_memalloc(sizeof(t_uint) * state->H_size);
 

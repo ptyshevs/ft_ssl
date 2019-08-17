@@ -49,7 +49,7 @@ int		main(int ac, char **av)
 	if ((command = map_command(args->command)))
 	{
 		opt = parse_opt(command->type, args->op);
-		show_inp_sources(opt->inp_srcs);
+//		show_inp_sources(opt->inp_srcs);
 
 		if (command->type == HASH)
 			apply_to_srcs(command, opt);

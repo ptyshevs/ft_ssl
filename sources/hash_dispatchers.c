@@ -104,15 +104,6 @@ void	sha_cleanup(t_uc **aoutput, t_sha **astate)
 	ft_memdel((void **)astate);
 }
 
-/*
- * Directly copy-pasted from md5_communicate
- */
-static t_uint	to_big_endian(t_uint val)
-{
-	return (((val & 0x000000FF) << 24) | ((val & 0x0000FF00) << 8) |
-			((val & 0x00FF0000) >> 8) | ((val & 0xFF000000) >> 24));
-}
-
 t_uc	*sha_collect_digest(t_sha *state)
 {
 	char	*res;
@@ -122,7 +113,7 @@ t_uc	*sha_collect_digest(t_sha *state)
 	i = 0;
 	while (i < 8)
 	{
-		res = ft_concat(res, ft_sprintf("%08x", to_big_endian(state->H[i])), True);
+		res = ft_concat(res, ft_sprintf("%08x", state->H[i]), True);
 		i++;
 	}
 	return ((t_uc *)res);
@@ -130,7 +121,7 @@ t_uc	*sha_collect_digest(t_sha *state)
 
 void	print_block(t_inp *inp)
 {
-	int i = 0;
+	t_uint i = 0;
 	while (i < inp->block_size)
 	{
 		ft_printf("%08b ", inp->block[i]);
@@ -190,9 +181,9 @@ void	sha_dispatch(t_options *opt, t_inp *inp)
 		if ((t_uint)inp->block_bytes < inp->block_size)
 		{
 			finished = True;
-			print_block(inp);
+//			print_block(inp);
 			sha_padding(inp);
-			print_block(inp);
+//			print_block(inp);
 		}
 		sha256_block(inp, state);
 	}
