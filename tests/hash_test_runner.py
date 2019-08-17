@@ -38,7 +38,7 @@ def gen_rand_string(maxlen=10):
 
 
 def fuzz(ft_ssl_path, subcommand, ssl_binary="openssl", n=100, l=10, verbose=0):
-    command_template = "echo '{}' | {} " + subcommand
+    command_template = "echo -n '{}' | {} " + subcommand
     error_log = []
     for _ in range(n):
         inp = gen_rand_string(maxlen=l)
@@ -75,7 +75,7 @@ def subcommand_to_unit_tests(subcommand):
 
 def run_ut_suite(ft_ssl_path, subcommand, test_suite, ssl_binary="openssl", verbose=False):
     errors = []
-    command_template = "echo '{}' | {} " + subcommand
+    command_template = "echo -n '{}' | {} " + subcommand
 
     for (test_name, test_input) in test_suite:
         my_command = command_template.format(test_input, ft_ssl_path)

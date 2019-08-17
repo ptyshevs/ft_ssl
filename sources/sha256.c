@@ -106,11 +106,11 @@ void	sha256_block(t_inp *inp, t_sha *st)
 	t_uint	t2;
 	int		i;
 
-//	show_internal_state(st); //ok
+	show_internal_state(st); //ok
 	ft_memcpy(st->H_prev, st->H, st->H_size * sizeof(t_uint));
 	sha_collect_words(inp, st);
 	prepare_message_shedule(st);
-//	show_message_shedule(st);
+	show_message_shedule(st);
 	t_uint a = st->H[0];
 	t_uint b = st->H[1];
 	t_uint c = st->H[2];

@@ -181,9 +181,9 @@ void	sha_dispatch(t_options *opt, t_inp *inp)
 		if ((t_uint)inp->block_bytes < inp->block_size)
 		{
 			finished = True;
-//			print_block(inp);
+			print_block(inp);
 			sha_padding(inp);
-//			print_block(inp);
+			print_block(inp);
 		}
 		sha256_block(inp, state);
 	}
