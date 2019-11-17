@@ -61,6 +61,8 @@ def output_errors(error_log, file=sys.stdout):
 def subcommand_to_unit_tests(subcommand):
     if subcommand == 'sha256':
         return sha256_test_suite()
+    elif subcommand == 'md5':
+        return md5_test_suite()
     else:
         return None
 
@@ -103,7 +105,8 @@ def run_ut_suite(ft_ssl_path, subcommand, test_suite, pool, ssl_binary="openssl"
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument("-p", "--path", default="./ft_ssl", help="path to ft_ssl executable")
+    parser.add_argument('-s', '--subcommand', default='all', help='subcommand to test (most test-suites are shared between all subcommands)')
+    parser.add_argument("-p", "--path", default="../ft_ssl", help="path to ft_ssl executable")
     parser.add_argument('-f', '--fuzz', default=False, help="Apply fuzzing after unit-tests are run", action='store_true')
     parser.add_argument("-v", '--verbose', default=False, help="Be more verbose", action='store_true')
     parser.add_argument("-l", '--log', default='error.log', help='File to write diff into')
@@ -116,28 +119,36 @@ if __name__ == '__main__':
 
     pool = mp.Pool(args.jobs)
 
-    subcommand = 'sha256'
+    supported_subcommands = ['md5', 'sha256']
+
+
+    if args.subcommand == 'all':
+        subcommands_to_run = supported_subcommands
+    else:
+        subcommands_to_run = [args.subcommand]
 
     error_log = []
-    # for subcommand in ['sha256', 'sha512']
 
-    # part 1: unit-tests
+    for subcommand in subcommands_to_run:
+        print("Testing", subcommand)
 
-    test_suite = subcommand_to_unit_tests(subcommand)
-    if test_suite is None:
-        print("ERROR: subcommand {} is not recognized".format(subcommand))
-        exit(1)
-    
-    ut_errors = run_ut_suite(args.path, subcommand, test_suite, pool, verbose=args.verbose)
-    error_log.extend(ut_errors)
-    
-    # part 2: optional fuzzing
+        # part 1: unit-tests
 
-    if args.fuzz:
-        for l in [10, 100, 1000]:
-            print("Fuzzing {} with len={}".format(subcommand, l))
-            fuzz_errors = fuzz(args.path, subcommand, verbose=args.verbose, l=l)
-            error_log.extend(fuzz_errors)
+        test_suite = subcommand_to_unit_tests(subcommand)
+        if test_suite is None:
+            print("ERROR: subcommand {} is not recognized".format(subcommand))
+            exit(1)
+
+        ut_errors = run_ut_suite(args.path, subcommand, test_suite, pool, verbose=args.verbose)
+        error_log.extend(ut_errors)
+
+        # part 2: optional fuzzing
+
+        if args.fuzz:
+            for l in [10, 100, 1000]:
+                print("Fuzzing {} with len={}".format(subcommand, l))
+                fuzz_errors = fuzz(args.path, subcommand, verbose=args.verbose, l=l)
+                error_log.extend(fuzz_errors)
     
     if len(error_log) > 0:
         with open(args.log, 'w+') as f:
