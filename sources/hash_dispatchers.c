@@ -71,7 +71,14 @@ void	md5_dispatch(t_options *opt, t_inp *inp)
 			finished = True;
 			md_padding(inp);
 		}
-		md5_block(inp, state);
+		if (inp->block_size == 128) {
+            md5_block(inp, state);
+            t_uc *pointer = inp->block;
+            inp->block = &inp->block[64];
+            md5_block(inp, state);
+            inp->block = pointer;
+		} else
+		    md5_block(inp, state);
 	}
 	if (!finished)  // (s)read failed
 	{

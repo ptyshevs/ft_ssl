@@ -61,6 +61,31 @@ void	md5_message_size(t_inp *inp, t_uc *len)
 }
 
 /*
+** When padding is congruent (message size is 56 modulo 64) or greater, block is reallocated and 64 bytes are added
+*/
+
+void    congruent_padding(t_inp *inp)
+{
+    int     write_idx;
+    t_uc	*len;
+    int		j;
+
+
+    inp->block = ft_realloc(inp->block, sizeof(t_uc) * 64, sizeof(t_uc) * 128, True);
+    inp->block_size = 128;
+    write_idx = inp->block_bytes;
+    inp->block[write_idx++] = 128;
+    while (write_idx < 120)
+        inp->block[write_idx++] = 0;
+    len = ft_memalloc(sizeof(t_uc) * 8);
+    md5_message_size(inp, len);
+    j = 0;
+    while (write_idx < 128)
+        inp->block[write_idx++] = len[j++];
+    ft_memdel((void **)&len);
+}
+
+/*
 ** Add padding to the message
 */
 
@@ -71,6 +96,8 @@ void	md_padding(t_inp *inp)
 	t_uc	*len;
 
 	i = inp->block_bytes;
+	if (i >= 56)
+        return congruent_padding(inp);
 	inp->block[i++] = 128;
 	while (i < 56)
 		inp->block[i++] = 0;
