@@ -90,9 +90,6 @@ def fuzz(ft_ssl_path, subcommand, ssl_binary="openssl", n=100, l=10, verbose=0):
 
 
 def run_ut_suite(ft_ssl_path, subcommand, test_suite, pool, ssl_binary="openssl", verbose=False):
-    errors = []
-    command_template = "echo -n '{}' | {} " + subcommand
-
     pool_input = [(ft_ssl_path, subcommand, ssl_binary, verbose, test_name, test_input) \
             for (test_name, test_input) in test_suite]
 
