@@ -38,7 +38,6 @@ def gen_rand_string(maxlen=10):
     return ''.join(random.choices(alphabet, k=maxlen))
 
 
-
 def output_errors(error_log, file=sys.stdout):
     """
     Error format - tuple of (gt_input, gt_output, my_input, my_output)
@@ -64,7 +63,7 @@ def job(ft_ssl_path, subcommand, ssl_binary, verbose, test_name, test_input):
 
     same_result = gt_out == my_out
     if same_result:
-        out = tuple()
+        out = tuple()  # empty tuples indicate OK test
     else:
         out = (test_input, gt_command, gt_out, my_command, my_out)
 
