@@ -53,49 +53,53 @@ def subcommand_to_unit_tests(subcommand):
     else:
         return None
 
-def job(ft_ssl_path, subcommand, ssl_binary, verbose, test_name, test_input):
+def job(args, subcommand, ssl_binary, test_name, test_input):
     command_template = "{} {}"
 
+    ft_ssl_path = args.path
     my_command = command_template.format(ft_ssl_path, subcommand)
     gt_command = command_template.format(ssl_binary, subcommand)
     gt_out = run_command(gt_command, test_input)
     my_out = run_command(my_command, test_input)
 
+    if args.openssl_version == 111:
+        if gt_out.startswith('(stdin)= '):
+            gt_out = gt_out[9:]
     same_result = gt_out == my_out
     if same_result:
         out = tuple()  # empty tuples indicate OK test
     else:
         out = (test_input, gt_command, gt_out, my_command, my_out)
 
-    if verbose == 1 and not same_result:
+    if args.verbose == 1 and not same_result:
         print("[gt] {} != {} [ft]".format(gt_out, my_out))
     else:
         print("{}.{}".format(GREEN if same_result else RED, NC), end='', flush=True)
 
     return out
 
-def fuzz(ft_ssl_path, subcommand, ssl_binary="openssl", n=100, l=10, verbose=0):
+def fuzz(args, subcommand, ssl_binary="openssl", n=100, l=10):
     fuzz_suite = [(f'fuzz{i}', gen_rand_string(maxlen=l)) for i in range(n)]
 
-    pool_input = [(ft_ssl_path, subcommand, ssl_binary, verbose, test_name, test_input) \
+    pool_input = [(args, subcommand, ssl_binary, test_name, test_input) \
                   for (test_name, test_input) in fuzz_suite]
 
     errors = pool.starmap(job, pool_input)
     errors = [e for e in errors if len(e)]
 
-    if not verbose:
+    if not args.verbose:
         print("")  # finish line
     return errors
 
 
-def run_ut_suite(ft_ssl_path, subcommand, test_suite, pool, ssl_binary="openssl", verbose=False):
-    pool_input = [(ft_ssl_path, subcommand, ssl_binary, verbose, test_name, test_input) \
+def run_ut_suite(args, subcommand, test_suite, pool, ssl_binary="openssl"):
+    pool_input = [(args, subcommand, ssl_binary, test_name, test_input) \
             for (test_name, test_input) in test_suite]
 
     errors = pool.starmap(job, pool_input)
     errors = [e for e in errors if len(e)]
 
-    if not verbose:
+    if not args.verbose:
         print("")  # finish line
     return errors
 
@@ -109,6 +113,7 @@ if __name__ == '__main__':
     parser.add_argument("-v", '--verbose', default=False, help="Be more verbose", action='store_true')
     parser.add_argument("-l", '--log', default='error.log', help='File to write diff into')
     parser.add_argument("-j", "--jobs", default=4, help='Number of workers in a thread pool')
+    parser.add_argument("-o", "--openssl_version", default=111, help='Version of OpenSSL to test for')
 
     args = parser.parse_args()
 
@@ -137,7 +142,7 @@ if __name__ == '__main__':
             print("ERROR: subcommand {} is not recognized".format(subcommand))
             exit(1)
 
-        ut_errors = run_ut_suite(args.path, subcommand, test_suite, pool, verbose=args.verbose)
+        ut_errors = run_ut_suite(args, subcommand, test_suite, pool)
         error_log.extend(ut_errors)
 
         # part 2: optional fuzzing
@@ -145,10 +150,10 @@ if __name__ == '__main__':
         if args.fuzz:
             for l in [10, 100, 1000]:
                 print("Fuzzing {} with len={}".format(subcommand, l))
-                fuzz_errors = fuzz(args.path, subcommand, verbose=args.verbose, l=l)
+                fuzz_errors = fuzz(args, subcommand, l=l)
                 error_log.extend(fuzz_errors)
-
     if len(error_log) > 0:
         with open(args.log, 'w+') as f:
             output_errors(error_log, f)
             print("Errors written into", args.log)
+    pool.close()

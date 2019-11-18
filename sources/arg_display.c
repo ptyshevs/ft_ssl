@@ -24,7 +24,7 @@
 
 int		display_usage(t_args *args)
 {
-	int	i;
+	// int	i; // Commented because is unused
 
 	if (args->command == NULL)
 	{
@@ -38,7 +38,7 @@ int		display_usage(t_args *args)
 		ft_printf("Standard commands:\n");
 		ft_printf("\nMessage Digest commands:\n");
 		ft_printf("\nCipher commands:\n");
-		i = 0;
+		// i = 0;
 //		while (g_ciphers[i].command_name)
 //			ft_printf("%s\n", g_ciphers[i++].command_name);
 		return (1);

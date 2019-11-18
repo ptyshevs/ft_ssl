@@ -39,7 +39,7 @@ $(LIBFT_DEPENDENCY):
 $(EXENAME): $(LIBSSL_DEPENDENCY) $(LIBFT_DEPENDENCY) ${LIBSSL_CFILES}
 	@echo ${CYAN}[Compiling $(EXENAME)]${NC}
 	@gcc $(FLAGS) -o $(EXENAME) $^ -I $(LIBSSL_INCDIR) \
-	-I$(LIBFT_INCDIR) -L ${LIBFT_DIR} -lft
+	-I$(LIBFT_INCDIR) -L ${LIBFT_DIR} -lft -lm
 	@echo ${GREEN}"[--------| $(EXENAME) is up to date. |---------]"${NC}
 
 $(ODIR)/%.o: libssl/sources/%.c $(LIBSSL_HEADERS)
